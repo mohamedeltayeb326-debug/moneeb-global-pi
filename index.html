@@ -203,8 +203,8 @@
 
     <!-- كود البرمجة والربط مع Pi SDK -->
     <script>
-        // 1. تهيئة مكتبة Pi (sandbox: true للتجربة، غيّرها إلى false عند الإطلاق الرسمي)
-        Pi.init({ version: "2.0", sandbox: true });
+        // 1. تهيئة مكتبة Pi للاتصال المباشر
+        Pi.init({ version: "2.0", sandbox: false });
 
         // 2. دالة معالجة الدفعات المعلقة
         function onIncompletePaymentFound(payment) {
@@ -274,3 +274,4 @@
     </script>
 
 </body>
+</html>
