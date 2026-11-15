@@ -1,277 +1,263 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moneeb Global Hub | منصة الخدمات التجارية على Pi Network</title>
-    
-    <!-- استدعاء مكتبة Pi SDK الرسمية -->
-    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-
-    <style>
-        :root {
-            --primary-color: #592b83; /* لون شبكة Pi البنفسجي */
-            --secondary-color: #f4b41a; /* اللون الذهبي */
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-dark: #2c3e50;
-            --text-muted: #6c757d;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-
-        /* رأس الصفحة */
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), #3b195c);
-            color: white;
-            text-align: center;
-            padding: 2.5rem 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .header h1 {
-            margin: 0 0 0.5rem 0;
-            font-size: 2rem;
-        }
-
-        .header p {
-            margin: 0.3rem 0;
-            opacity: 0.9;
-        }
-
-        #user-status {
-            display: inline-block;
-            margin-top: 1rem;
-            background-color: rgba(255, 255, 255, 0.15);
-            padding: 0.5rem 1.2rem;
-            border-radius: 20px;
-            font-weight: bold;
-            color: var(--secondary-color);
-            border: 1px solid rgba(244, 180, 26, 0.4);
-        }
-
-        /* الحاوية الرئيسية */
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .section-title {
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 0.5rem;
-            margin: 2.5rem 0 1.5rem 0;
-            color: var(--primary-color);
-            font-size: 1.4rem;
-        }
-
-        /* شبكة البطاقات */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            text-align: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border: 1px solid #eee;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-        }
-
-        .card h3 {
-            margin-top: 0;
-            color: var(--text-dark);
-        }
-
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        .price {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin: 1rem 0;
-        }
-
-        /* الأزرار */
-        .btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.7rem 1.5rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s;
-            text-decoration: none;
-            display: inline-block;
-            box-sizing: border-box;
-        }
-
-        .btn:hover {
-            background-color: #431e66;
-        }
-
-        .btn-agent {
-            background-color: #1e7e34;
-        }
-
-        .btn-agent:hover {
-            background-color: #155724;
-        }
-
-        /* سجل العمليات */
-        #payment-log {
-            margin-top: 2rem;
-            padding: 1rem;
-            background: #eef2f7;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MONEEB GLOBAL | منصة منيب للتجارة والاستثمار</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --gold: #f59e0b;
+      --gold-hover: #d97706;
+      --text-light: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+    header {
+      background: rgba(30, 41, 59, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .brand { font-size: 1.3rem; font-weight: 800; color: var(--gold); letter-spacing: 0.5px; }
+    .user-badge {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--accent-blue);
+    }
+    .hero {
+      text-align: center;
+      padding: 40px 20px 28px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .hero h1 { font-size: 1.9rem; color: var(--gold); margin-bottom: 10px; }
+    .hero p { color: var(--text-muted); font-size: 1rem; }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 10px 20px 50px;
+    }
+    .section-title {
+      font-size: 1.25rem;
+      margin-bottom: 18px;
+      padding-right: 10px;
+      border-right: 4px solid var(--gold);
+      color: var(--text-light);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-bottom: 36px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .card:hover { transform: translateY(-3px); border-color: var(--gold); }
+    .tag {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--gold);
+      font-size: 0.78rem;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      width: fit-content;
+    }
+    .card h3 { font-size: 1.15rem; margin-bottom: 8px; }
+    .card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 18px; }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .price { font-weight: 700; font-size: 1.1rem; color: var(--gold); }
+    button {
+      background: var(--gold);
+      color: var(--bg-dark);
+      border: none;
+      padding: 11px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+    button:hover { background: var(--gold-hover); }
+    footer {
+      text-align: center;
+      padding: 24px 20px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- رأس الصفحة وحالة الاتصال -->
-    <div class="header">
-        <h1>Moneeb Global Hub</h1>
-        <p>منصة الخدمات التجارية والاستثمارية على Pi Network</p>
-        <div id="user-status">جاري الاتصال بحساب Pi...</div>
-    </div>
+  <header>
+    <div class="brand">MONEEB GLOBAL</div>
+    <div class="user-badge" id="user-status">جاري الاتصال بشبكة Pi...</div>
+  </header>
 
-    <div class="container">
-        
-        <!-- القسم الأول: المتجر التجاري -->
-        <h2 class="section-title">🛍️ المتجر التجاري (Commercial Store)</h2>
-        <div class="grid">
-            <div class="card">
-                <h3>باقة الاستشارات التجارية</h3>
-                <p>دراسة جدوى واستشارات استيراد وتصدير متكاملة</p>
-                <div class="price">Pi 5.0</div>
-                <button class="btn" onclick="makePiPayment('باقة الاستشارات التجارية', 5.0)">شراء الآن</button>
-            </div>
+  <section class="hero">
+    <h1>منصة منيب للتجارة والاستثمار والحلول الرقمية</h1>
+    <p>بوابتك المعتمدة للتجارة الإلكترونية، المحاصيل الزراعية، والخدمات الرقمية المدعومة بمدفوعات Pi Network.</p>
+  </section>
 
-            <div class="card">
-                <h3>عقد مقايضة محاصيل زراعية</h3>
-                <p>توثيق وحجز صفقة زراعية عبر العقود الذكية</p>
-                <div class="price">Pi 15.0</div>
-                <button class="btn" onclick="makePiPayment('عقد مقايضة محاصيل زراعية', 15.0)">شراء الآن</button>
-            </div>
+  <main class="container">
+    <h2 class="section-title">الخدمات والباقات التجارية</h2>
+    <div class="grid">
+      <div class="card">
+        <div>
+          <span class="tag">محاصيل وتجارة</span>
+          <h3>باقة التوريد والوساطة الزراعية</h3>
+          <p>ربط المنتجين والموردين بعروض المحاصيل الزراعية وتسهيل طلبات التوريد والتسعير المباشر.</p>
         </div>
-
-        <!-- القسم الثاني: الخدمات الذكية والمجتمعية -->
-        <h2 class="section-title">🤖 الخدمات الذكية والعقود (Smart Services)</h2>
-        <div class="grid">
-            <div class="card">
-                <h3>الوكيل الذكي للعقود (AI Agent)</h3>
-                <p>تدقيق العقود الذكية ومساعدة التجار والمستثمرين بالذكاء الاصطناعي</p>
-                <a href="https://mohamedeltayeb326-debugs-projects-a.vercel.app" target="_blank" class="btn btn-agent">فتح الوكيل الذكي</a>
-            </div>
-
-            <div class="card">
-                <h3>دليل الفرص والاستثمار</h3>
-                <p>استعراض المشاريع المتاحة والشراكات التجارية المعتمدة</p>
-                <button class="btn" onclick="alert('قريباً: سيتم تفعيل بوابة الشراكات الاستثمارية المباشرة')">استعراض الخدمة</button>
-            </div>
+        <div>
+          <div class="price-row">
+            <span>قيمة الحجز / الطلب</span>
+            <span class="price">5 Pi</span>
+          </div>
+          <button onclick="payForService(5, 'باقة التوريد والوساطة الزراعية', 'agri_01')">دفع عبر Pi</button>
         </div>
+      </div>
 
-        <!-- صندوق عرض حالة المعاملات -->
-        <div id="payment-log"></div>
+      <div class="card">
+        <div>
+          <span class="tag">استشارات تجارية</span>
+          <h3>استشارة التصدير والتسويق الدولي</h3>
+          <p>دراسة جدوى مبدئية وربط تجاري للأسواق الإقليمية والدولية عبر شبكة منيب التجارية.</p>
+        </div>
+        <div>
+          <div class="price-row">
+            <span>رسوم الخدمة</span>
+            <span class="price">3 Pi</span>
+          </div>
+          <button onclick="payForService(3, 'استشارة التصدير والتسويق الدولي', 'trade_02')">دفع عبر Pi</button>
+        </div>
+      </div>
 
+      <div class="card">
+        <div>
+          <span class="tag">حلول رقمية</span>
+          <h3>تطوير وإدراج المتاجر على Web3</h3>
+          <p>إعداد وتجهيز واجهات التجارة الرقمية وربطها ببوابات الدفع الحديثة.</p>
+        </div>
+        <div>
+          <div class="price-row">
+            <span>باقة التأسيس</span>
+            <span class="price">10 Pi</span>
+          </div>
+          <button onclick="payForService(10, 'تطوير وإدراج المتاجر على Web3', 'web3_03')">دفع عبر Pi</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <span class="tag">اختبار النظام</span>
+          <h3>معاملة اختبار الدفع السريع</h3>
+          <p>تجربة فورية للتحقق من سرعة اعتماد المعاملات عبر خادم MONEEB GLOBAL.</p>
+        </div>
+        <div>
+          <div class="price-row">
+            <span>قيمة الاختبار</span>
+            <span class="price">1 Pi</span>
+          </div>
+          <button onclick="payForService(1, 'اختبار الدفع السريع MONEEB GLOBAL', 'test_001')">تجربة الدفع (1 Pi)</button>
+        </div>
+      </div>
     </div>
+  </main>
 
-    <!-- كود البرمجة والربط مع Pi SDK -->
-    <script>
-        // 1. تهيئة مكتبة Pi للاتصال المباشر
-        Pi.init({ version: "2.0", sandbox: false });
+  <footer>
+    &copy; 2026 MONEEB GLOBAL — جميع الحقوق محفوظة | مدعوم بشبكة Pi Network
+  </footer>
 
-        // 2. دالة معالجة الدفعات المعلقة
-        function onIncompletePaymentFound(payment) {
-            console.log("تم العثور على دفعة غير مكتملة:", payment);
-            logMessage("⚠️ يوجد معاملة معلقة برقم: " + payment.identifier);
+  <script>
+    const Pi = window.Pi;
+    Pi.init({ version: "2.0", sandbox: true });
+
+    async function callBackend(action, paymentId, txid = null) {
+      const response = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, paymentId, txid })
+      });
+      return response.json();
+    }
+
+    function onIncompletePaymentFound(payment) {
+      if (payment.transaction && payment.transaction.txid) {
+        callBackend('complete', payment.identifier, payment.transaction.txid);
+      }
+    }
+
+    async function auth() {
+      try {
+        const scopes = ['username', 'payments'];
+        const authResult = await Pi.authenticate(scopes, onIncompletePaymentFound);
+        document.getElementById('user-status').innerText = "مرحباً بك: @" + authResult.user.username;
+      } catch (err) {
+        document.getElementById('user-status').innerText = "يرجى الفتح داخل متصفح Pi Browser";
+      }
+    }
+
+    function payForService(amount, memo, itemId) {
+      Pi.createPayment({
+        amount: amount,
+        memo: memo,
+        metadata: { itemId: itemId }
+      }, {
+        onReadyForServerApproval: async function(paymentId) {
+          await callBackend('approve', paymentId);
+        },
+        onReadyForServerCompletion: async function(paymentId, txid) {
+          await callBackend('complete', paymentId, txid);
+          alert("تمت عملية الدفع بنجاح لـ: " + memo);
+        },
+        onCancel: function(paymentId) {
+          alert("تم إلغاء العملية");
+        },
+        onError: function(error, payment) {
+          alert("خطأ في الدفع: " + error.message);
         }
+      });
+    }
 
-        // 3. تسجيل الدخول التلقائي عند فتح الصفحة
-        document.addEventListener("DOMContentLoaded", function() {
-            const scopes = ['username', 'payments'];
-            const statusEl = document.getElementById("user-status");
-
-            if (typeof Pi !== 'undefined') {
-                Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
-                    console.log("تم تسجيل الدخول بنجاح:", auth.user.username);
-                    statusEl.innerText = "✅ مرحباً بك: " + auth.user.username;
-                }).catch(function(error) {
-                    console.error("خطأ في المصادقة:", error);
-                    statusEl.innerText = "⚠️ يرجى فتح الموقع داخل Pi Browser للاتصال بحسابك";
-                });
-            } else {
-                statusEl.innerText = "❌ تعذر تحميل مكتبة Pi SDK";
-            }
-        });
-
-        // 4. دالة تنفيذ الدفع بعملة Pi
-        function makePiPayment(productName, amount) {
-            const paymentData = {
-                amount: parseFloat(amount),
-                memo: "شراء: " + productName + " - Moneeb Global",
-                metadata: { product: productName, platform: "MoneebGlobalHub" }
-            };
-
-            const callbacks = {
-                onReadyForServerApproval: function(paymentId) {
-                    console.log("جاهز لموافقة السيرفر. Payment ID:", paymentId);
-                    logMessage("⏳ جاري معالجة الطلب... رقم المعاملة: " + paymentId);
-                },
-                onReadyForServerCompletion: function(paymentId, txid) {
-                    console.log("اكتملت المعاملة! TxID:", txid);
-                    logMessage("✅ تم الدفع بنجاح! رقم التوثيق (TxID): " + txid);
-                    alert("تمت عملية الشراء بنجاح!");
-                },
-                onCancel: function(paymentId) {
-                    console.log("تم إلغاء الدفع:", paymentId);
-                    logMessage("❌ تم إلغاء عملية الدفع من قبلك.");
-                },
-                onError: function(error, payment) {
-                    console.error("خطأ في الدفع:", error);
-                    logMessage("❌ حدث خطأ أثناء الدفع: " + error.message);
-                }
-            };
-
-            try {
-                Pi.createPayment(paymentData, callbacks);
-            } catch (err) {
-                alert("تنبيه: يجب فتح الموقع من داخل تطبيق Pi Browser لتنفيذ عمليات الدفع.");
-            }
-        }
-
-        // دالة مساعدة لعرض الرسائل في أسفل الصفحة
-        function logMessage(msg) {
-            const logBox = document.getElementById("payment-log");
-            logBox.style.display = "block";
-            logBox.innerHTML = msg;
-        }
-    </script>
-
+    auth();
+  </script>
 </body>
 </html>
