@@ -90,7 +90,6 @@
     .hero h1 span { color: var(--gold); }
     .hero p { color: var(--text-muted); font-size: 0.98rem; }
 
-    /* شريط مؤشرات الثقة */
     .kpi-strip {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -121,7 +120,6 @@
     .about-banner h2 { font-size: 1.05rem; color: var(--teal); margin-bottom: 6px; }
     .about-banner p { font-size: 0.92rem; color: var(--text-light); }
 
-    /* حاسبة الحاويات والشحن */
     .calc-box {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -233,37 +231,84 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(295px, 1fr));
+      gap: 20px;
       margin-bottom: 36px;
     }
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 22px;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: 0.2s;
+      transition: 0.25s;
     }
-    .card:hover { background: var(--card-hover); transform: translateY(-2px); }
+    .card:hover { background: var(--card-hover); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.35); }
     .card.land-card { border-color: rgba(245, 158, 11, 0.45); }
     .card.equip-card { border-color: rgba(56, 189, 248, 0.45); }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+
+    /* تنسيق صور البطاقات */
+    .card-img-wrap {
+      position: relative;
+      width: 100%;
+      height: 185px;
+      background: #0f172a;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+    .card:hover .card-img-wrap img {
+      transform: scale(1.05);
+    }
+    .card-img-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+    .card-body {
+      padding: 18px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-grow: 1;
+    }
+
     .tag {
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(11, 17, 32, 0.85);
+      backdrop-filter: blur(4px);
       color: var(--teal);
-      font-size: 0.76rem;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      font-size: 0.74rem;
       padding: 3px 10px;
       border-radius: 6px;
-      font-weight: 600;
+      font-weight: 700;
     }
-    .tag.land-tag { background: rgba(245, 158, 11, 0.18); color: var(--gold); }
-    .tag.equip-tag { background: rgba(56, 189, 248, 0.18); color: var(--accent-blue); }
-    .status-pill { font-size: 0.74rem; color: var(--teal); font-weight: 600; }
+    .tag.land-tag { color: var(--gold); border-color: rgba(245, 158, 11, 0.5); }
+    .tag.equip-tag { color: var(--accent-blue); border-color: rgba(56, 189, 248, 0.5); }
+    .status-pill {
+      background: rgba(11, 17, 32, 0.85);
+      backdrop-filter: blur(4px);
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      color: var(--teal);
+      font-weight: 700;
+    }
     .card h3 { font-size: 1.08rem; margin-bottom: 8px; color: var(--text-light); }
-    .card p { color: var(--text-muted); font-size: 0.87rem; margin-bottom: 14px; }
+    .card p { color: var(--text-muted); font-size: 0.86rem; margin-bottom: 14px; }
     .specs {
       font-size: 0.79rem;
       color: var(--accent-blue);
@@ -308,7 +353,6 @@
     }
     .cart-add-btn:hover { background: rgba(16, 185, 129, 0.15); }
 
-    /* شريط الطلبات المجمعة العائم */
     .floating-basket {
       position: fixed;
       bottom: 16px;
@@ -336,7 +380,6 @@
       cursor: pointer;
     }
 
-    /* بوابة الموردين والتوثيق */
     .supplier-box {
       background: var(--card-bg);
       border: 1px solid var(--teal);
@@ -405,12 +448,11 @@
   </header>
 
   <section class="hero">
-    <div class="hero-badge" id="hero-badge">NAHAWAND COMMERCIAL ENTITY • B2B GLOBAL TRADE</div>
+    <div class="hero-badge">NAHAWAND COMMERCIAL ENTITY • B2B GLOBAL TRADE</div>
     <h1 id="hero-title">منصة منيب <span>للمحاصيل والأراضي والمعدات</span> الزراعية</h1>
     <p id="hero-sub">منظومة زراعية وتجارية متكاملة تجمع بين تصدير المحاصيل، الأراضي الاستثمارية، المعدات والآليات، والأسمدة المعتمدة عبر شبكة Pi.</p>
   </section>
 
-  <!-- مؤشرات الثقة -->
   <div class="kpi-strip">
     <div class="kpi-card">
       <span class="kpi-val">+17</span>
@@ -438,7 +480,6 @@
       </p>
     </div>
 
-    <!-- حاسبة الحاويات والتسعير -->
     <div class="calc-box">
       <h2 id="calc-title">حاسبة الشحن والحاويات التقديرية للمستوردين</h2>
       <div class="calc-grid">
@@ -449,8 +490,8 @@
         <div>
           <label id="lbl-incoterm">نظام التسليم التجاري:</label>
           <select id="calc-term" onchange="updateCalc()">
-            <option value="FOB">FOB (تسليم ميناء التصدير)</option>
-            <option value="CIF">CIF (شامل الشحن والتأمين لميناء المشتري)</option>
+            <option value="FOB" id="opt-fob">FOB (تسليم ميناء التصدير)</option>
+            <option value="CIF" id="opt-cif">CIF (شامل الشحن والتأمين لميناء المشتري)</option>
           </select>
         </div>
       </div>
@@ -462,22 +503,22 @@
       <div class="steps-grid">
         <div class="step-item">
           <span class="step-num">01</span>
-          <h4 id="st1-t">طلب العينة أو التسعيرة</h4>
+          <h4 id="st1-t">1. طلب العينة أو التسعيرة</h4>
           <p id="st1-d">يختار العميل المحصول أو المعدة ويسدد رسوم فتح الملف عبر Pi مع بيانات التواصل.</p>
         </div>
         <div class="step-item">
           <span class="step-num">02</span>
-          <h4 id="st2-t">الفحص والمواصفات الفنية</h4>
+          <h4 id="st2-t">2. الفحص والمواصفات الفنية</h4>
           <p id="st2-d">إرسال العينة وشهادة الفحص المخبري (SGS) للمحاصيل، أو الكتالوج الفني للمعدات والأراضي.</p>
         </div>
         <div class="step-item">
           <span class="step-num">03</span>
-          <h4 id="st3-t">العقد والفاتورة المبدئية</h4>
+          <h4 id="st3-t">3. العقد والفاتورة المبدئية</h4>
           <p id="st3-d">إصدار عرض سعر رسمي (FOB / CIF — صالح لـ 48 ساعة) وتوقيع عقد التوريد التجاري.</p>
         </div>
         <div class="step-item">
           <span class="step-num">04</span>
-          <h4 id="st4-t">التنفيذ والشحن والاستلام</h4>
+          <h4 id="st4-t">4. التنفيذ والشحن والاستلام</h4>
           <p id="st4-d">استخراج شهادات المنشأ والصحة وبوليصة الشحن ومتابعة التسليم حتى ميناء الوصول.</p>
         </div>
       </div>
@@ -488,7 +529,6 @@
       <input type="text" id="buyer-info" placeholder="الاسم / اسم الشركة / رقم واتساب أو البريد الإلكتروني...">
     </div>
 
-    <!-- شريط التبويبات المفصل -->
     <div class="filter-tabs">
       <button class="tab-btn active" onclick="filterCrops('all', this)" id="tab-all">الكل (17)</button>
       <button class="tab-btn" onclick="filterCrops('seeds', this)" id="tab-seeds">الحبوب والبذور</button>
@@ -501,7 +541,6 @@
     <h2 class="section-title" id="cat-title">كتالوج المحاصيل والمعدات والخدمات الاستثمارية</h2>
     <div class="grid" id="crops-grid"></div>
 
-    <!-- بوابة تسجيل الموردين وأصحاب الأراضي والمصانع -->
     <div class="supplier-box">
       <h2 id="sup-title">بوابة المزارعين والمصانع والموردين وأصحاب الأراضي</h2>
       <p id="sup-desc">هل لديك محصول جاهز للتصدير، أرض زراعية للاستثمار، أو معدات وأسمدة للتوريد؟ سجّل عرضك لربطه مباشرة بالمستوردين والمزارعين.</p>
@@ -513,13 +552,11 @@
       <button class="sup-btn" onclick="registerSupplier()" id="sup-btn">تسجيل العرض عبر واتساب الإدارة</button>
     </div>
 
-    <!-- قسم التوثيق التجاري -->
     <div class="trust-banner" id="trust-box">
       تُدار المنصة تجارياً تحت مظلة الكيان التجاري المسجل رسمياً: <strong>نهاوند للتجارة والاستثمار (NAHAWAND)</strong> — جميع الشحنات تخضع لشهادات الفحص المخبري المعتمدة (SGS / المواصفات القياسية) وشهادات المنشأ الرسمية، ويتم التعاقد عبر الاعتمادات المستندية (LC) أو الدفع مقابل المستندات (CAD).
     </div>
   </div>
 
-  <!-- سلة الاستفسارات المجمعة -->
   <div class="floating-basket" id="basket-bar">
     <span id="basket-count">0 بنود محددة</span>
     <button onclick="sendBasketWhatsApp()" id="basket-send-btn">إرسال قائمة الطلبات دفعة واحدة</button>
@@ -548,6 +585,8 @@
         calcTitle: "حاسبة الشحن والحاويات التقديرية للمستوردين",
         lblTons: "الكمية المطلوبة (بالطن المتري):",
         lblIncoterm: "نظام التسليم التجاري:",
+        optFob: "FOB (تسليم ميناء التصدير)",
+        optCif: "CIF (شامل الشحن والتأمين لميناء المشتري)",
         wfTitle: "آلية تنفيذ الطلبية من التعاقد حتى الاستلام",
         st1T: "1. طلب العينة أو التسعيرة", st1D: "يختار العميل المحصول أو المعدة ويسدد رسوم فتح الملف عبر Pi مع بيانات التواصل.",
         st2T: "2. الفحص والمواصفات الفنية", st2D: "إرسال العينة وشهادة الفحص المخبري (SGS) للمحاصيل، أو الكتالوج الفني للمعدات والأراضي.",
@@ -578,6 +617,8 @@
         calcTitle: "Container & Freight Estimator for Importers",
         lblTons: "Required Quantity (Metric Tons):",
         lblIncoterm: "Trade Incoterm:",
+        optFob: "FOB (Free On Board - Export Port)",
+        optCif: "CIF (Cost, Insurance & Freight)",
         wfTitle: "Order Execution Workflow: From Inquiry to Delivery",
         st1T: "1. Sample or Quote Request", st1D: "Client selects a crop or equipment and pays the file/sample fee via Pi.",
         st2T: "2. Inspection & Technical Specs", st2D: "SGS lab certificates & samples for crops, or technical catalogs for machinery & lands.",
@@ -608,6 +649,8 @@
         calcTitle: "İthalatçılar İçin Konteyner ve Sevkiyat Hesaplayıcı",
         lblTons: "Talep Edilen Miktar (Metrik Ton):",
         lblIncoterm: "Teslim Şekli (Incoterm):",
+        optFob: "FOB (İhracat Limanı Teslim)",
+        optCif: "CIF (Navlun ve Sigorta Dahil)",
         wfTitle: "Sipariş Süreci: Talepten Teslimata Kadar",
         st1T: "1. Numune veya Teklif Talebi", st1D: "Müşteri ürün veya ekipmanı seçer ve Pi ile dosya/numune ücretini öder.",
         st2T: "2. Analiz ve Teknik Katalog", st2D: "Mahsuller için SGS analizi, makineler ve araziler için teknik şartnameler.",
@@ -631,92 +674,109 @@
     };
 
     const cropsData = [
-      // 1-10: المحاصيل الزراعية
+      // 1-10: المحاصيل الزراعية مع صور عالية الدقة
       { id: "crop_sesame", cat: "seeds", type: "crop", price: 5,
+        img: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "حبوب وبذور", title: "السمسم الأبيض والأحمر", desc: "الذهب الأبيض للتصدير؛ نقاوة عالية ونسبة زيت مرتفعة لصناعة الطحينة والزيوت والمخبوزات.", specs: "نقاوة 99% — نسبة زيت +50% — تعبئة 50 كجم" },
         en: { tag: "Oilseeds", title: "White & Red Sesame Seeds", desc: "High-purity export sesame with rich oil content, ideal for tahini, edible oils, and bakery industries.", specs: "Purity 99% — Oil +50% — 50kg PP Bags" },
         tr: { tag: "Yağlı Tohumlar", title: "Beyaz ve Kırmızı Susam", desc: "Tahin, bitkisel yağ ve unlu mamuller için yüksek saflık ve yağ oranına sahip ihracatlık susam.", specs: "Saflık %99 — Yağ +%50 — 50 kg Çuval" }
       },
       { id: "crop_gum", cat: "gum", type: "crop", price: 7,
+        img: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "صمغ طبيعي", title: "الصمغ العربي (الهشاب والطلح)", desc: "منتج استراتيجي يدخل كعنصر أساسي في الصناعات الغذائية والمشروبات الغازية والأدوية.", specs: "خام منظف يدوياً أو مطحون — درجة أولى للتصدير" },
         en: { tag: "Natural Gum", title: "Gum Arabic (Hashab & Talha)", desc: "Strategic natural emulsifier essential for global beverage, food, and pharmaceutical industries.", specs: "Hand-picked Cleaned / Powder — Grade A Export" },
         tr: { tag: "Doğal Zamk", title: "Arap Zamkı (Hashab ve Talha)", desc: "Gıda, içecek ve ilaç endüstrileri için vazgeçilmez stratejik doğal hammadde.", specs: "El ile Temizlenmiş / Toz — 1. Sınıf İhracat" }
       },
       { id: "crop_peanut", cat: "seeds", type: "crop", price: 5,
+        img: "https://images.unsplash.com/photo-1567892737950-30c4db37cd89?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "حبوب وبذور", title: "الفول السوداني (مقشور وبقشره)", desc: "محصول نقدي عالي الجودة لصناعة الزبدة والحلويات واستخلاص زيوت الطعام الفاخرة.", specs: "خالٍ من الأفلاتوكسين — فرز آلي ويدوي" },
         en: { tag: "Oilseeds", title: "Peanuts / Groundnuts", desc: "Premium export groundnuts (shelled & in-shell) for peanut butter, confectionery, and oil extraction.", specs: "Aflatoxin-free — Machine & Hand Sorted" },
         tr: { tag: "Yağlı Tohumlar", title: "Yer Fıstığı (Kabuklu ve İç)", desc: "Fıstık ezmesi, şekerleme ve yağ üretimi için yüksek kaliteli ihracatlık yer fıstığı.", specs: "Aflatoksinsiz — Makine ve El Seçimi" }
       },
       { id: "crop_hibiscus", cat: "gum", type: "crop", price: 4,
+        img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "أعشاب مجففة", title: "الكركديه (بتلات كاملة ومجروش)", desc: "بتلات مجففة طبيعية بلون قرمزي داكن ونكهة مميزة للمشروبات الطبيعية والأعشاب الطبية.", specs: "تجفيف ظلي طبيعي — رطوبة أقل من 10%" },
         en: { tag: "Dried Herbs", title: "Hibiscus Flowers", desc: "Naturally shade-dried deep crimson petals in high demand for herbal teas and natural food coloring.", specs: "Natural Shade-Dried — Moisture < 10%" },
         tr: { tag: "Kurutulmuş Bitki", title: "Hibiskus Çiçeği", desc: "Bitki çayları ve doğal gıda boyaları için yoğun renkli ve aromalı kurutulmuş yapraklar.", specs: "Doğal Gölge Kurutma — Nem <%10" }
       },
       { id: "crop_cotton", cat: "seeds", type: "crop", price: 6,
+        img: "https://images.unsplash.com/photo-1594897030264-ab7d87efc473?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "ألياف صناعية", title: "القطن طويل وقصير التيلة", desc: "ألياف طبيعية عالية المتانة والنقاء تُعد المادة الخام الأولى لأرقى مصانع الغزل والنسيج.", specs: "بالات مضغوطة قياسية — شهادات منشأ وجودة" },
         en: { tag: "Fibers", title: "Long & Short Staple Cotton", desc: "High-strength pure natural cotton fibers for leading global spinning and textile mills.", specs: "Standard Pressed Bales — Origin & Quality Certs" },
         tr: { tag: "Tekstil Elyafı", title: "Uzun ve Kısa Elyaflı Pamuk", desc: "İplik ve tekstil fabrikaları için yüksek mukavemetli saf doğal pamuk balyaları.", specs: "Standart Preslenmiş Balyalar — Menşe Sertifikalı" }
       },
       { id: "crop_sorghum", cat: "seeds", type: "crop", price: 4,
+        img: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "حبوب غذائية", title: "الذرة الرفيعة والدخن", desc: "حبوب غذائية أساسية عالية القيمة الغذائية تُصدّر للاستخدام البشري وكأعلاف مركزة.", specs: "أصناف بيضاء وصفراء — توريد بالحاويات" },
         en: { tag: "Grains", title: "Sorghum & Millet", desc: "Nutrient-rich staple grains exported in bulk for human consumption and concentrated livestock feed.", specs: "White & Yellow Varieties — Container Bulk" },
         tr: { tag: "Tahıllar", title: "Sorgum ve Darı", desc: "İnsan tüketimi ve yem sanayii için yüksek besin değerli ihracatlık tahıllar.", specs: "Beyaz ve Sarı Çeşitler — Konteyner Bazlı" }
       },
       { id: "crop_watermelon", cat: "seeds", type: "crop", price: 4,
+        img: "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "بذور وتسالي", title: "حب البطيخ (التسالي)", desc: "بذور منتقاة بعناية تحظى بطلب واسع في أسواق الشرق الأوسط وأوروبا للتسالي والصناعات الغذائية.", specs: "أحجام موحدة — فرز ونظافة عالية" },
         en: { tag: "Seeds", title: "Watermelon Seeds", desc: "Carefully graded seeds widely demanded across Middle Eastern and European snack markets.", specs: "Uniform Sizes — High Cleanliness" },
         tr: { tag: "Çekirdek", title: "Karpuz Çekirdeği", desc: "Orta Doğu ve Avrupa kuruyemiş pazarlarında yoğun talep gören seçilmiş çekirdekler.", specs: "Standart Boyut — Yüksek Temizlik" }
       },
       { id: "crop_fruits", cat: "fruits", type: "crop", price: 5,
+        img: "https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "فواكه طازجة", title: "المانجو والموز والحمضيات", desc: "فواكه استوائية طازجة تُجهز وتُعبأ وفق معايير التبريد والتصدير السريع للأسواق الإقليمية.", specs: "تعبئة كرتونية مبردة — شحن جوي وبحري" },
         en: { tag: "Fresh Fruits", title: "Mango, Banana & Citrus", desc: "Fresh tropical fruits packed under cold-chain standards for rapid regional and international export.", specs: "Reefer Carton Packing — Air & Sea Freight" },
         tr: { tag: "Taze Meyve", title: "Mango, Muz ve Narenciye", desc: "Soğuk zincir standartlarında paketlenen taze tropikal meyveler.", specs: "Soğutmalı Koli Paketleme — Hava ve Deniz Kargo" }
       },
       { id: "crop_spices", cat: "fruits", type: "crop", price: 4,
+        img: "https://images.unsplash.com/photo-1532336414038-cf19250c5757?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "توابل وبهارات", title: "الكمون والكزبرة والشطة", desc: "محاصيل عطرية مجففة طبيعياً تحتفظ بزيوتها الطيارة ونكهتها القوية للتوريد التجاري بالجملة.", specs: "حصاد موسمي جديد — خالية من الشوائب" },
         en: { tag: "Spices", title: "Cumin, Coriander & Chili", desc: "Sun-dried aromatic spices retaining rich essential oils and strong flavor for wholesale supply.", specs: "New Seasonal Harvest — Impurity-Free" },
         tr: { tag: "Baharatlar", title: "Kimyon, Kişniş ve Acı Biber", desc: "Toptan tedarik için uçucu yağlarını ve aromasını koruyan güneşte kurutulmuş baharatlar.", specs: "Yeni Sezon Hasat — Yabancı Maddesiz" }
       },
       { id: "crop_dates", cat: "fruits", type: "crop", price: 4,
+        img: "https://images.unsplash.com/photo-1590502593747-42a996133562?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "تمور", title: "التمور الجافة ونصف الجافة", desc: "أصناف عالية الجودة قابلة للتخزين الطويل ومناسبة للتعبئة التجارية والتصدير المباشر.", specs: "عبوات 10 و 25 كجم — جاهزة للتصدير" },
         en: { tag: "Dates", title: "Dry & Semi-Dry Dates", desc: "Long-shelf-life premium date varieties suited for commercial packaging and direct export.", specs: "10kg & 25kg Cartons — Export Ready" },
         tr: { tag: "Hurma", title: "Kuru ve Yarı Kuru Hurma", desc: "Uzun raf ömrüne sahip, ticari paketleme ve ihracata uygun kaliteli hurma çeşitleri.", specs: "10 kg ve 25 kg Koliler — İhracata Hazır" }
       },
 
-      // 11-13: قسم الأراضي والاستثمار والخدمات اللوجستية
+      // 11-13: الأراضي والاستثمار والخدمات اللوجستية
       { id: "srv_lands", cat: "lands", type: "land", price: 8,
+        img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "أراضي واستثمار", title: "تأجير وشراء الأراضي الزراعية الاستثمارية", desc: "توفير مساحات زراعية خصبة مروية ومطرية بمساحات مختلفة مع مستندات الملكية الرسمية ودراسات الجدوى.", specs: "أراضٍ مروية ومطرية — عقود استثمار وشراكة موثقة" },
         en: { tag: "Agri-Lands", title: "Agricultural Land Lease & Investment", desc: "Fertile irrigated and rain-fed agricultural lands with verified title deeds and feasibility studies.", specs: "Irrigated & Rain-fed — Verified Investment Contracts" },
         tr: { tag: "Tarım Arazileri", title: "Yatırımlık Tarım Arazisi Kiralama ve Satış", desc: "Resmi tapulu, sulanabilir verimli tarım arazileri ve fizibilite etütleri.", specs: "Sulu ve Kuru Tarım — Onaylı Yatırım Sözleşmeleri" }
       },
       { id: "srv_contract_farming", cat: "lands", type: "land", price: 7,
+        img: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "زراعة تعاقدية", title: "باقات الزراعة التعاقدية المتكاملة للمستثمرين", desc: "تمويل وإدارة زراعة مساحات محددة لحساب المستورد (أرض + تقاوي + إشراف) وتسليم كامل المحصول عند الحصاد.", specs: "إدارة هندسية كاملة — ضمان تسليم المحصول للتصدير" },
         en: { tag: "Contract Farming", title: "Turnkey Contract Farming Packages", desc: "End-to-end cultivation management (land + seeds + supervision) tailored to deliver 100% of harvest to buyer.", specs: "Full Agronomy Management — Export Harvest Guarantee" },
         tr: { tag: "Sözleşmeli Tarım", title: "Anahtar Teslim Sözleşmeli Tarım Paketleri", desc: "Alıcı adına özel ekim yönetimi (arazi + tohum + denetim) ve hasadın tamamının ihracata teslimi.", specs: "Tam Ziraat Yönetimi — İhracat Hasat Garantisi" }
       },
       { id: "srv_logistics", cat: "lands", type: "land", price: 5,
+        img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "خدمات لوجستية", title: "الفحص المخبري والتخليص الجمركي والشحن", desc: "إنجاز كافة معاملات التصدير، الفحص المخبري الدولي (SGS)، استخراج شهادات المنشأ، وحجز الحاويات.", specs: "تخليص متكامل — شحن FOB و CIF لجميع الموانئ" },
         en: { tag: "Logistics & Lab", title: "SGS Lab Testing, Customs & Freight", desc: "Complete export documentation, international SGS certification, Certificate of Origin, and sea freight.", specs: "End-to-End Clearance — FOB & CIF Worldwide Shipping" },
         tr: { tag: "Lojistik ve Analiz", title: "SGS Laboratuvar Analizi, Gümrükleme ve Nakliye", desc: "İhracat belgeleri, uluslararası SGS sertifikası, Menşe Şahadetnamesi ve konteyner taşımacılığı.", specs: "Tam Gümrükleme — Tüm Limanlara FOB ve CIF Teslim" }
       },
 
-      // 14-17: قسم المعدات والآليات والأسمدة (4 بطاقات متخصصة)
+      // 14-17: المعدات والآليات والأسمدة
       { id: "eq_tractors", cat: "equipment", type: "equip", price: 6,
+        img: "https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "آليات ثقيلة", title: "الجرارات الزراعية والحاصدات والمحاريث", desc: "توريد الجرارات والحاصدات الحديثة (من المصانع التركية والدولية المعتمدة) مع توفر قطع الغيار والضمان.", specs: "قدرات حصانية متنوعة — شحن مباشر للمشاريع الزراعية" },
         en: { tag: "Heavy Machinery", title: "Tractors, Harvesters & Plows", desc: "Supply of modern tractors and combine harvesters from certified Turkish and global manufacturers with spare parts.", specs: "Various Horsepower — Direct Export to Agri-Projects" },
         tr: { tag: "Ağır Tarım Makineleri", title: "Traktörler, Biçerdöverler ve Pulluklar", desc: "Onaylı Türk ve uluslararası üreticilerden yedek parça garantili modern traktör ve biçerdöver tedariki.", specs: "Farklı Beygir Güçleri — Projelere Doğrudan Sevkiyat" }
       },
       { id: "eq_processing", cat: "equipment", type: "equip", price: 6,
+        img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "خطوط إنتاج", title: "آلات الغربلة والفرز والتعبئة للمحاصيل", desc: "توريد خطوط تنظيف وغربلة السمسم والحبوب والفول السوداني وموازين التعبئة الآلية لرفع درجة النقاوة إلى 99.9%.", specs: "طاقة إنتاجية عالية — تركيب وتشغيل وتدريب" },
         en: { tag: "Processing Lines", title: "Seed Cleaning, Sorting & Packing Lines", desc: "Sesame, grain, and peanut cleaning/grading lines and automated bagging scales to achieve 99.9% export purity.", specs: "High Capacity — Installation & Technical Support" },
         tr: { tag: "Eleme ve Paketleme", title: "Tohum Eleme, Ayıklama ve Paketleme Hatları", desc: "%99.9 ihracat saflığı için susam, tahıl ve yer fıstığı temizleme/boylama hatları ve otomatik çuvallama.", specs: "Yüksek Kapasite — Kurulum ve Teknik Destek" }
       },
       { id: "eq_irrigation", cat: "equipment", type: "equip", price: 5,
+        img: "https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "أنظمة الري", title: "شبكات الري المحوري (Pivot) والتنقيط والمضخات", desc: "توريد أجهزة الري المحوري، شبكات التنقيط والرش، ومضخات المياه العاملة بالديزل والطاقة الشمسية.", specs: "تصميم هندسي حسب المساحة — توفير المياه والطاقة" },
         en: { tag: "Irrigation Systems", title: "Center Pivot, Drip Irrigation & Solar Pumps", desc: "Supply of center pivot systems, drip/sprinkler networks, and solar/diesel water pumping stations.", specs: "Custom Area Engineering — Water & Energy Efficient" },
         tr: { tag: "Sulama Sistemleri", title: "Center Pivot, Damla Sulama ve Güneş Pompaları", desc: "Center pivot sulama sistemleri, damla/yağmurlama hatları ve güneş enerjili su pompaları tedariki.", specs: "Araziye Özel Mühendislik — Su ve Enerji Tasarrufu" }
       },
       { id: "eq_fertilizers", cat: "equipment", type: "equip", price: 5,
+        img: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80",
         ar: { tag: "أسمدة ومدخلات", title: "الأسمدة المركبة (NPK) واليوريا والمخصبات", desc: "توريد الأسمدة الكيميائية والعضوية المعتمدة (NPK، يوريا، داب، وعناصر صغرى) والتقاوي المحسنة بالجملة.", specs: "عبوات 25 و 50 كجم — شحن بالحاويات مع شهادات تحليل" },
         en: { tag: "Fertilizers & Seeds", title: "NPK, Urea, Organic Fertilizers & Certified Seeds", desc: "Bulk supply of certified NPK, Urea, DAP, micronutrients, and high-yield hybrid seeds with lab certificates.", specs: "25kg & 50kg Bags — Container Bulk with COA" },
         tr: { tag: "Gübre ve Tohum", title: "NPK, Üre, Organik Gübre ve Sertifikalı Tohum", desc: "Analiz sertifikalı NPK, Üre, DAP, mikro element gübreler ve yüksek verimli sertifikalı tohum tedariki.", specs: "25 kg ve 50 kg Torbalar — Analiz Sertifikalı Konteyner" }
@@ -773,23 +833,28 @@
 
         grid.innerHTML += `
           <div class="${cardClass}">
-            <div>
-              <div class="card-header">
+            <div class="card-img-wrap">
+              <img src="${c.img}" alt="${item.title}" loading="lazy" onerror="this.src='https://placehold.co/800x450/0f172a/f59e0b?text=MONEEB+CROPS'">
+              <div class="card-img-overlay">
                 <span class="${tagClass}">${item.tag}</span>
                 <span class="status-pill">${t.availText}</span>
               </div>
-              <h3>${item.title}</h3>
-              <p>${item.desc}</p>
-              <div class="specs">${item.specs}</div>
             </div>
-            <div>
-              <div class="price-row">
-                <span>${feeLabel}</span>
-                <span class="price">${c.price} Pi</span>
+            <div class="card-body">
+              <div>
+                <h3>${item.title}</h3>
+                <p>${item.desc}</p>
+                <div class="specs">${item.specs}</div>
               </div>
-              <div class="btn-group">
-                <button class="order-btn" onclick="orderCrop(${c.price}, '${item.title}', '${c.id}')">${t.btnOrder}</button>
-                <button class="cart-add-btn" onclick="addToBasket('${item.title}')">${t.btnAddList}</button>
+              <div>
+                <div class="price-row">
+                  <span>${feeLabel}</span>
+                  <span class="price">${c.price} Pi</span>
+                </div>
+                <div class="btn-group">
+                  <button class="order-btn" onclick="orderCrop(${c.price}, '${item.title}', '${c.id}')">${t.btnOrder}</button>
+                  <button class="cart-add-btn" onclick="addToBasket('${item.title}')">${t.btnAddList}</button>
+                </div>
               </div>
             </div>
           </div>`;
@@ -814,6 +879,8 @@
       document.getElementById("calc-title").innerText = t.calcTitle;
       document.getElementById("lbl-tons").innerText = t.lblTons;
       document.getElementById("lbl-incoterm").innerText = t.lblIncoterm;
+      document.getElementById("opt-fob").innerText = t.optFob;
+      document.getElementById("opt-cif").innerText = t.optCif;
       document.getElementById("wf-title").innerText = t.wfTitle;
       document.getElementById("st1-t").innerText = t.st1T; document.getElementById("st1-d").innerText = t.st1D;
       document.getElementById("st2-t").innerText = t.st2T; document.getElementById("st2-d").innerText = t.st2D;
