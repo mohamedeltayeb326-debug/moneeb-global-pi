@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="html-root">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MONEEB GLOBAL | منصة منيب للتجارة والاستثمار</title>
+  <title>MONEEB CROPS | منصة منيب للمحاصيل والخدمات والمعدات الزراعية</title>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
     :root {
-      --bg-dark: #0f172a;
+      --bg-dark: #0b1120;
       --card-bg: #1e293b;
+      --card-hover: #243147;
       --border: #334155;
       --gold: #f59e0b;
       --gold-hover: #d97706;
+      --teal: #10b981;
+      --teal-dark: #059669;
       --text-light: #f8fafc;
       --text-muted: #94a3b8;
       --accent-blue: #38bdf8;
@@ -21,12 +24,13 @@
       font-family: system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
       background: var(--bg-dark);
       color: var(--text-light);
-      line-height: 1.6;
+      line-height: 1.65;
     }
     header {
-      background: rgba(30, 41, 59, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border);
-      padding: 16px 20px;
+      padding: 14px 20px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -37,37 +41,199 @@
       gap: 10px;
     }
     .brand { font-size: 1.3rem; font-weight: 800; color: var(--gold); letter-spacing: 0.5px; }
-    .user-badge {
-      background: var(--bg-dark);
+    .brand span { color: var(--teal); }
+    .header-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .lang-switcher {
+      display: flex;
+      background: var(--card-bg);
       border: 1px solid var(--border);
-      padding: 6px 14px;
       border-radius: 20px;
-      font-size: 0.85rem;
+      overflow: hidden;
+    }
+    .lang-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      padding: 5px 11px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .lang-btn.active { background: var(--gold); color: var(--bg-dark); }
+    .user-badge {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
       color: var(--accent-blue);
     }
+
     .hero {
       text-align: center;
-      padding: 40px 20px 28px;
-      max-width: 720px;
+      padding: 36px 20px 22px;
+      max-width: 880px;
       margin: 0 auto;
     }
-    .hero h1 { font-size: 1.9rem; color: var(--gold); margin-bottom: 10px; }
-    .hero p { color: var(--text-muted); font-size: 1rem; }
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 10px 20px 50px;
+    .hero-badge {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--gold);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
     }
+    .hero h1 { font-size: 1.85rem; color: var(--text-light); margin-bottom: 10px; }
+    .hero h1 span { color: var(--gold); }
+    .hero p { color: var(--text-muted); font-size: 0.98rem; }
+
+    /* شريط مؤشرات الثقة */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      max-width: 1080px;
+      margin: 0 auto 24px;
+      padding: 0 20px;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+    .kpi-val { font-size: 1.15rem; font-weight: 800; color: var(--teal); display: block; }
+    .kpi-lbl { font-size: 0.78rem; color: var(--text-muted); }
+
+    .container { max-width: 1080px; margin: 0 auto; padding: 10px 20px 70px; }
+
+    .about-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(245, 158, 11, 0.08));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 24px;
+    }
+    .about-banner h2 { font-size: 1.05rem; color: var(--teal); margin-bottom: 6px; }
+    .about-banner p { font-size: 0.92rem; color: var(--text-light); }
+
+    /* حاسبة الحاويات والشحن */
+    .calc-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .calc-box h2 { font-size: 1.05rem; color: var(--accent-blue); margin-bottom: 12px; }
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+    .calc-grid label { display: block; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 5px; }
+    .calc-grid select, .calc-grid input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+    .calc-result {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: rgba(11, 17, 32, 0.8);
+      border-inline-start: 4px solid var(--teal);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .workflow-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 26px;
+    }
+    .workflow-section h2 { font-size: 1.08rem; color: var(--gold); margin-bottom: 14px; }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+    .step-item {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .step-num {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 2px 9px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+    .step-item h4 { font-size: 0.95rem; margin-bottom: 4px; color: var(--teal); }
+    .step-item p { font-size: 0.83rem; color: var(--text-muted); }
+
+    .buyer-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+    }
+    .buyer-box label { display: block; font-size: 0.9rem; margin-bottom: 8px; color: var(--accent-blue); }
+    .buyer-box input {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    .filter-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+    .tab-btn {
+      background: var(--card-bg);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover { background: var(--teal); color: var(--bg-dark); border-color: var(--teal); }
+    .tab-btn.gold-tab { border-color: rgba(245, 158, 11, 0.5); color: var(--gold); }
+    .tab-btn.gold-tab.active, .tab-btn.gold-tab:hover { background: var(--gold); color: var(--bg-dark); border-color: var(--gold); }
+    .tab-btn.blue-tab { border-color: rgba(56, 189, 248, 0.5); color: var(--accent-blue); }
+    .tab-btn.blue-tab.active, .tab-btn.blue-tab:hover { background: var(--accent-blue); color: var(--bg-dark); border-color: var(--accent-blue); }
+
     .section-title {
-      font-size: 1.25rem;
+      font-size: 1.18rem;
       margin-bottom: 18px;
-      padding-right: 10px;
-      border-right: 4px solid var(--gold);
+      padding-inline-start: 10px;
+      border-inline-start: 4px solid var(--gold);
       color: var(--text-light);
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
       gap: 18px;
       margin-bottom: 36px;
     }
@@ -79,43 +245,142 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.2s, border-color 0.2s;
+      transition: 0.2s;
     }
-    .card:hover { transform: translateY(-3px); border-color: var(--gold); }
+    .card:hover { background: var(--card-hover); transform: translateY(-2px); }
+    .card.land-card { border-color: rgba(245, 158, 11, 0.45); }
+    .card.equip-card { border-color: rgba(56, 189, 248, 0.45); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .tag {
-      display: inline-block;
-      background: rgba(245, 158, 11, 0.15);
-      color: var(--gold);
-      font-size: 0.78rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--teal);
+      font-size: 0.76rem;
       padding: 3px 10px;
       border-radius: 6px;
-      margin-bottom: 10px;
-      width: fit-content;
+      font-weight: 600;
     }
-    .card h3 { font-size: 1.15rem; margin-bottom: 8px; }
-    .card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 18px; }
+    .tag.land-tag { background: rgba(245, 158, 11, 0.18); color: var(--gold); }
+    .tag.equip-tag { background: rgba(56, 189, 248, 0.18); color: var(--accent-blue); }
+    .status-pill { font-size: 0.74rem; color: var(--teal); font-weight: 600; }
+    .card h3 { font-size: 1.08rem; margin-bottom: 8px; color: var(--text-light); }
+    .card p { color: var(--text-muted); font-size: 0.87rem; margin-bottom: 14px; }
+    .specs {
+      font-size: 0.79rem;
+      color: var(--accent-blue);
+      background: rgba(11, 17, 32, 0.7);
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+    }
     .price-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
-      padding-top: 12px;
+      margin-bottom: 12px;
+      padding-top: 10px;
       border-top: 1px solid var(--border);
+      font-size: 0.85rem;
     }
-    .price { font-weight: 700; font-size: 1.1rem; color: var(--gold); }
-    button {
+    .price { font-weight: 800; font-size: 1.05rem; color: var(--gold); }
+    .btn-group { display: flex; gap: 8px; }
+    .order-btn {
       background: var(--gold);
       color: var(--bg-dark);
       border: none;
-      padding: 11px 18px;
+      padding: 10px 12px;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.88rem;
       cursor: pointer;
-      width: 100%;
-      transition: background 0.2s;
+      flex: 2;
     }
-    button:hover { background: var(--gold-hover); }
+    .order-btn:hover { background: var(--gold-hover); }
+    .cart-add-btn {
+      background: transparent;
+      color: var(--teal);
+      border: 1px solid var(--teal);
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      flex: 1;
+    }
+    .cart-add-btn:hover { background: rgba(16, 185, 129, 0.15); }
+
+    /* شريط الطلبات المجمعة العائم */
+    .floating-basket {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--teal-dark);
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 30px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      gap: 14px;
+      z-index: 200;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+    .floating-basket button {
+      background: var(--gold);
+      color: var(--bg-dark);
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* بوابة الموردين والتوثيق */
+    .supplier-box {
+      background: var(--card-bg);
+      border: 1px solid var(--teal);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 24px;
+    }
+    .supplier-box h2 { font-size: 1.1rem; color: var(--teal); margin-bottom: 8px; }
+    .supplier-box p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px; }
+    .sup-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .sup-inputs input {
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+    .sup-btn {
+      background: var(--teal);
+      color: var(--bg-dark);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .trust-banner {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+    .trust-banner strong { color: var(--gold); }
+
     footer {
       text-align: center;
       padding: 24px 20px;
@@ -128,135 +393,531 @@
 <body>
 
   <header>
-    <div class="brand">MONEEB GLOBAL</div>
-    <div class="user-badge" id="user-status">جاري الاتصال بشبكة Pi...</div>
+    <div class="brand">MONEEB <span>CROPS</span></div>
+    <div class="header-controls">
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('ar', this)">عربي</button>
+        <button class="lang-btn" onclick="setLang('en', this)">EN</button>
+        <button class="lang-btn" onclick="setLang('tr', this)">TR</button>
+      </div>
+      <div class="user-badge" id="user-status">Pi Network...</div>
+    </div>
   </header>
 
   <section class="hero">
-    <h1>منصة منيب للتجارة والاستثمار والحلول الرقمية</h1>
-    <p>بوابتك المعتمدة للتجارة الإلكترونية، المحاصيل الزراعية، والخدمات الرقمية المدعومة بمدفوعات Pi Network.</p>
+    <div class="hero-badge" id="hero-badge">NAHAWAND COMMERCIAL ENTITY • B2B GLOBAL TRADE</div>
+    <h1 id="hero-title">منصة منيب <span>للمحاصيل والأراضي والمعدات</span> الزراعية</h1>
+    <p id="hero-sub">منظومة زراعية وتجارية متكاملة تجمع بين تصدير المحاصيل، الأراضي الاستثمارية، المعدات والآليات، والأسمدة المعتمدة عبر شبكة Pi.</p>
   </section>
 
-  <main class="container">
-    <h2 class="section-title">الخدمات والباقات التجارية</h2>
-    <div class="grid">
-      <div class="card">
+  <!-- مؤشرات الثقة -->
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <span class="kpi-val">+17</span>
+      <span class="kpi-lbl" id="kpi1">محصولاً وخدمة ومعدة زراعية</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-val">SGS / ISO</span>
+      <span class="kpi-lbl" id="kpi2">شهادات فحص مخبري معتمدة</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-val">FOB / CIF</span>
+      <span class="kpi-lbl" id="kpi3">توريد وشحن دولي لجميع الموانئ</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-val">LC / CAD / Pi</span>
+      <span class="kpi-lbl" id="kpi4">خيارات تعاقد ودفع آمنة</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="about-banner">
+      <h2 id="about-title">نبذة تعريفية عن منصة MONEEB CROPS</h2>
+      <p id="about-desc">
+        بوابة رقمية شاملة لسلسلة الإمداد الزراعي؛ نربط المزارعين والمصانع بالمستوردين والمستثمرين العالميين لتصدير أجود المحاصيل، وتوفير الأراضي الزراعية الاستثمارية، وتوريد المعدات والآليات والأسمدة المعتمدة مع الفحص المخبري والشحن الدولي عبر شبكة Pi.
+      </p>
+    </div>
+
+    <!-- حاسبة الحاويات والتسعير -->
+    <div class="calc-box">
+      <h2 id="calc-title">حاسبة الشحن والحاويات التقديرية للمستوردين</h2>
+      <div class="calc-grid">
         <div>
-          <span class="tag">محاصيل وتجارة</span>
-          <h3>باقة التوريد والوساطة الزراعية</h3>
-          <p>ربط المنتجين والموردين بعروض المحاصيل الزراعية وتسهيل طلبات التوريد والتسعير المباشر.</p>
+          <label id="lbl-tons">الكمية المطلوبة (بالطن المتري):</label>
+          <input type="number" id="calc-tons" value="20" min="1" oninput="updateCalc()">
         </div>
         <div>
-          <div class="price-row">
-            <span>قيمة الحجز / الطلب</span>
-            <span class="price">5 Pi</span>
-          </div>
-          <button onclick="payForService(5, 'باقة التوريد والوساطة الزراعية', 'agri_01')">دفع عبر Pi</button>
+          <label id="lbl-incoterm">نظام التسليم التجاري:</label>
+          <select id="calc-term" onchange="updateCalc()">
+            <option value="FOB">FOB (تسليم ميناء التصدير)</option>
+            <option value="CIF">CIF (شامل الشحن والتأمين لميناء المشتري)</option>
+          </select>
         </div>
       </div>
+      <div class="calc-result" id="calc-output"></div>
+    </div>
 
-      <div class="card">
-        <div>
-          <span class="tag">استشارات تجارية</span>
-          <h3>استشارة التصدير والتسويق الدولي</h3>
-          <p>دراسة جدوى مبدئية وربط تجاري للأسواق الإقليمية والدولية عبر شبكة منيب التجارية.</p>
+    <div class="workflow-section">
+      <h2 id="wf-title">آلية تنفيذ الطلبية من التعاقد حتى الاستلام</h2>
+      <div class="steps-grid">
+        <div class="step-item">
+          <span class="step-num">01</span>
+          <h4 id="st1-t">طلب العينة أو التسعيرة</h4>
+          <p id="st1-d">يختار العميل المحصول أو المعدة ويسدد رسوم فتح الملف عبر Pi مع بيانات التواصل.</p>
         </div>
-        <div>
-          <div class="price-row">
-            <span>رسوم الخدمة</span>
-            <span class="price">3 Pi</span>
-          </div>
-          <button onclick="payForService(3, 'استشارة التصدير والتسويق الدولي', 'trade_02')">دفع عبر Pi</button>
+        <div class="step-item">
+          <span class="step-num">02</span>
+          <h4 id="st2-t">الفحص والمواصفات الفنية</h4>
+          <p id="st2-d">إرسال العينة وشهادة الفحص المخبري (SGS) للمحاصيل، أو الكتالوج الفني للمعدات والأراضي.</p>
         </div>
-      </div>
-
-      <div class="card">
-        <div>
-          <span class="tag">حلول رقمية</span>
-          <h3>تطوير وإدراج المتاجر على Web3</h3>
-          <p>إعداد وتجهيز واجهات التجارة الرقمية وربطها ببوابات الدفع الحديثة.</p>
+        <div class="step-item">
+          <span class="step-num">03</span>
+          <h4 id="st3-t">العقد والفاتورة المبدئية</h4>
+          <p id="st3-d">إصدار عرض سعر رسمي (FOB / CIF — صالح لـ 48 ساعة) وتوقيع عقد التوريد التجاري.</p>
         </div>
-        <div>
-          <div class="price-row">
-            <span>باقة التأسيس</span>
-            <span class="price">10 Pi</span>
-          </div>
-          <button onclick="payForService(10, 'تطوير وإدراج المتاجر على Web3', 'web3_03')">دفع عبر Pi</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div>
-          <span class="tag">اختبار النظام</span>
-          <h3>معاملة اختبار الدفع السريع</h3>
-          <p>تجربة فورية للتحقق من سرعة اعتماد المعاملات عبر خادم MONEEB GLOBAL.</p>
-        </div>
-        <div>
-          <div class="price-row">
-            <span>قيمة الاختبار</span>
-            <span class="price">1 Pi</span>
-          </div>
-          <button onclick="payForService(1, 'اختبار الدفع السريع MONEEB GLOBAL', 'test_001')">تجربة الدفع (1 Pi)</button>
+        <div class="step-item">
+          <span class="step-num">04</span>
+          <h4 id="st4-t">التنفيذ والشحن والاستلام</h4>
+          <p id="st4-d">استخراج شهادات المنشأ والصحة وبوليصة الشحن ومتابعة التسليم حتى ميناء الوصول.</p>
         </div>
       </div>
     </div>
-  </main>
+
+    <div class="buyer-box">
+      <label for="buyer-info" id="buyer-label">بيانات المشتري أو المستثمر (مطلوب قبل إرسال الطلب):</label>
+      <input type="text" id="buyer-info" placeholder="الاسم / اسم الشركة / رقم واتساب أو البريد الإلكتروني...">
+    </div>
+
+    <!-- شريط التبويبات المفصل -->
+    <div class="filter-tabs">
+      <button class="tab-btn active" onclick="filterCrops('all', this)" id="tab-all">الكل (17)</button>
+      <button class="tab-btn" onclick="filterCrops('seeds', this)" id="tab-seeds">الحبوب والبذور</button>
+      <button class="tab-btn" onclick="filterCrops('gum', this)" id="tab-gum">الصمغ والأعشاب</button>
+      <button class="tab-btn" onclick="filterCrops('fruits', this)" id="tab-fruits">الفواكه والتمور والتوابل</button>
+      <button class="tab-btn gold-tab" onclick="filterCrops('lands', this)" id="tab-lands">الأراضي والخدمات اللوجستية</button>
+      <button class="tab-btn blue-tab" onclick="filterCrops('equipment', this)" id="tab-equipment">المعدات والآليات والأسمدة</button>
+    </div>
+
+    <h2 class="section-title" id="cat-title">كتالوج المحاصيل والمعدات والخدمات الاستثمارية</h2>
+    <div class="grid" id="crops-grid"></div>
+
+    <!-- بوابة تسجيل الموردين وأصحاب الأراضي والمصانع -->
+    <div class="supplier-box">
+      <h2 id="sup-title">بوابة المزارعين والمصانع والموردين وأصحاب الأراضي</h2>
+      <p id="sup-desc">هل لديك محصول جاهز للتصدير، أرض زراعية للاستثمار، أو معدات وأسمدة للتوريد؟ سجّل عرضك لربطه مباشرة بالمستوردين والمزارعين.</p>
+      <div class="sup-inputs">
+        <input type="text" id="sup-name" placeholder="اسم المورد / المزرعة / المصنع">
+        <input type="text" id="sup-item" placeholder="نوع المحصول / الأرض / المعدة أو السماد والكمية">
+        <input type="text" id="sup-contact" placeholder="رقم الهاتف / الواتساب والموقع">
+      </div>
+      <button class="sup-btn" onclick="registerSupplier()" id="sup-btn">تسجيل العرض عبر واتساب الإدارة</button>
+    </div>
+
+    <!-- قسم التوثيق التجاري -->
+    <div class="trust-banner" id="trust-box">
+      تُدار المنصة تجارياً تحت مظلة الكيان التجاري المسجل رسمياً: <strong>نهاوند للتجارة والاستثمار (NAHAWAND)</strong> — جميع الشحنات تخضع لشهادات الفحص المخبري المعتمدة (SGS / المواصفات القياسية) وشهادات المنشأ الرسمية، ويتم التعاقد عبر الاعتمادات المستندية (LC) أو الدفع مقابل المستندات (CAD).
+    </div>
+  </div>
+
+  <!-- سلة الاستفسارات المجمعة -->
+  <div class="floating-basket" id="basket-bar">
+    <span id="basket-count">0 بنود محددة</span>
+    <button onclick="sendBasketWhatsApp()" id="basket-send-btn">إرسال قائمة الطلبات دفعة واحدة</button>
+  </div>
 
   <footer>
-    &copy; 2026 MONEEB GLOBAL — جميع الحقوق محفوظة | مدعوم بشبكة Pi Network
+    &copy; 2026 MONEEB CROPS (NAHAWAND Commercial Entity) | Powered by Pi Network
   </footer>
 
   <script>
-    const Pi = window.Pi;
-    Pi.init({ version: "2.0", sandbox: true });
+    // ضع رقم واتساب شركتك هنا مع مفتاح الدولة بدون + أو أصفار
+    const ADMIN_WHATSAPP = "905XXXXXXXXX";
+    let currentLang = "ar";
+    let currentFilter = "all";
+    let currentPiUser = "Guest";
+    let basketItems = [];
 
-    async function callBackend(action, paymentId, txid = null) {
-      const response = await fetch('/api/payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, paymentId, txid })
-      });
-      return response.json();
-    }
+    const uiText = {
+      ar: {
+        dir: "rtl",
+        heroTitle: "منصة منيب <span>للمحاصيل والأراضي والمعدات</span> الزراعية",
+        heroSub: "منظومة زراعية وتجارية متكاملة تجمع بين تصدير المحاصيل، الأراضي الاستثمارية، المعدات والآليات، والأسمدة المعتمدة عبر شبكة Pi.",
+        kpi1: "محصولاً وخدمة ومعدة زراعية", kpi2: "شهادات فحص مخبري معتمدة", kpi3: "توريد وشحن دولي لجميع الموانئ", kpi4: "خيارات تعاقد ودفع آمنة",
+        aboutTitle: "نبذة تعريفية عن منصة MONEEB CROPS",
+        aboutDesc: "بوابة رقمية شاملة لسلسلة الإمداد الزراعي؛ نربط المزارعين والمصانع بالمستوردين والمستثمرين العالميين لتصدير أجود المحاصيل، وتوفير الأراضي الزراعية الاستثمارية، وتوريد المعدات والآليات والأسمدة المعتمدة مع الفحص المخبري والشحن الدولي عبر شبكة Pi.",
+        calcTitle: "حاسبة الشحن والحاويات التقديرية للمستوردين",
+        lblTons: "الكمية المطلوبة (بالطن المتري):",
+        lblIncoterm: "نظام التسليم التجاري:",
+        wfTitle: "آلية تنفيذ الطلبية من التعاقد حتى الاستلام",
+        st1T: "1. طلب العينة أو التسعيرة", st1D: "يختار العميل المحصول أو المعدة ويسدد رسوم فتح الملف عبر Pi مع بيانات التواصل.",
+        st2T: "2. الفحص والمواصفات الفنية", st2D: "إرسال العينة وشهادة الفحص المخبري (SGS) للمحاصيل، أو الكتالوج الفني للمعدات والأراضي.",
+        st3T: "3. العقد والفاتورة المبدئية", st3D: "إصدار عرض سعر رسمي (FOB / CIF — صالح لـ 48 ساعة) وتوقيع عقد التوريد التجاري.",
+        st4T: "4. التنفيذ والشحن والاستلام", st4D: "استخراج شهادات المنشأ والصحة وبوليصة الشحن ومتابعة التسليم حتى ميناء الوصول.",
+        buyerLabel: "بيانات المشتري أو المستثمر (مطلوب قبل إرسال الطلب):",
+        buyerPh: "الاسم / اسم الشركة / رقم واتساب أو البريد الإلكتروني...",
+        tabAll: "الكل (17)", tabSeeds: "الحبوب والبذور", tabGum: "الصمغ والأعشاب", tabFruits: "الفواكه والتمور والتوابل",
+        tabLands: "الأراضي والخدمات اللوجستية", tabEquipment: "المعدات والآليات والأسمدة",
+        catTitle: "كتالوج المحاصيل والمعدات والخدمات الاستثمارية",
+        sampleLabel: "طلب عينة فحص + عرض سعر",
+        serviceLabel: "رسوم دراسة الملف والتسعير",
+        availText: "● متاح للتوريد",
+        btnOrder: "طلب عبر Pi",
+        btnAddList: "+ للقائمة",
+        supTitle: "بوابة المزارعين والمصانع والموردين وأصحاب الأراضي",
+        supDesc: "هل لديك محصول جاهز للتصدير، أرض زراعية للاستثمار، أو معدات وأسمدة للتوريد؟ سجّل عرضك لربطه مباشرة بالمستوردين والمزارعين.",
+        supBtn: "تسجيل العرض عبر واتساب الإدارة",
+        alertMissing: "يرجى إدخال اسمك أو اسم الشركة ورقم التواصل أولاً."
+      },
+      en: {
+        dir: "ltr",
+        heroTitle: "MONEEB CROPS — <span>Crops, Lands & Agri-Equipment</span>",
+        heroSub: "An integrated B2B agricultural ecosystem combining crop exports, investment lands, machinery, and certified fertilizers via Pi Network.",
+        kpi1: "Crops, Equipment & Services", kpi2: "Certified Lab Inspection", kpi3: "Global Port Shipping", kpi4: "Secure Trade & Payment",
+        aboutTitle: "About MONEEB CROPS Platform",
+        aboutDesc: "A comprehensive digital supply-chain gateway connecting farmers and factories with global importers and investors for premium crop exports, agricultural lands, machinery, and fertilizers via Pi.",
+        calcTitle: "Container & Freight Estimator for Importers",
+        lblTons: "Required Quantity (Metric Tons):",
+        lblIncoterm: "Trade Incoterm:",
+        wfTitle: "Order Execution Workflow: From Inquiry to Delivery",
+        st1T: "1. Sample or Quote Request", st1D: "Client selects a crop or equipment and pays the file/sample fee via Pi.",
+        st2T: "2. Inspection & Technical Specs", st2D: "SGS lab certificates & samples for crops, or technical catalogs for machinery & lands.",
+        st3T: "3. Proforma & Contract", st3D: "Issuing official FOB/CIF Proforma Invoice (valid 48h) and signing the supply contract.",
+        st4T: "4. Execution & Delivery", st4D: "Certificate of Origin, Phytosanitary docs, and Bill of Lading to destination port.",
+        buyerLabel: "Buyer / Investor Details (Required before ordering):",
+        buyerPh: "Full Name / Company Name / WhatsApp or Email...",
+        tabAll: "All (17)", tabSeeds: "Grains & Oilseeds", tabGum: "Gum & Herbs", tabFruits: "Fruits, Dates & Spices",
+        tabLands: "Lands & Export Logistics", tabEquipment: "Machinery, Tools & Fertilizers",
+        catTitle: "Export Crops, Machinery & Investment Catalog",
+        sampleLabel: "Lab Sample + Official Quote",
+        serviceLabel: "File Study & Quote Fee",
+        availText: "● Ready for Supply",
+        btnOrder: "Order via Pi",
+        btnAddList: "+ List",
+        supTitle: "Farmers, Factories, Suppliers & Landowners Portal",
+        supDesc: "Have export crops, investment land, machinery, or fertilizers? Register your supply to connect directly with buyers.",
+        supBtn: "Submit Supply via WhatsApp",
+        alertMissing: "Please enter your Name/Company and WhatsApp/Email first."
+      },
+      tr: {
+        dir: "ltr",
+        heroTitle: "MONEEB CROPS — <span>Tarım Ürünleri, Araziler ve Ekipmanlar</span>",
+        heroSub: "Ürün ihracatı, yatırım arazileri, tarım makineleri ve sertifikalı gübreleri Pi Network üzerinde birleştiren B2B ekosistem.",
+        kpi1: "Ürün, Ekipman ve Hizmet", kpi2: "Onaylı Laboratuvar Analizi", kpi3: "Tüm Limanlara Sevkiyat", kpi4: "Güvenli Ticaret ve Ödeme",
+        aboutTitle: "MONEEB CROPS Hakkında",
+        aboutDesc: "Çiftçileri ve fabrikaları küresel ithalatçılarla buluşturan kapsamlı tedarik zinciri portalı; kaliteli mahsul ihracatı, yatırım arazileri, tarım makineleri ve gübre tedariki sunar.",
+        calcTitle: "İthalatçılar İçin Konteyner ve Sevkiyat Hesaplayıcı",
+        lblTons: "Talep Edilen Miktar (Metrik Ton):",
+        lblIncoterm: "Teslim Şekli (Incoterm):",
+        wfTitle: "Sipariş Süreci: Talepten Teslimata Kadar",
+        st1T: "1. Numune veya Teklif Talebi", st1D: "Müşteri ürün veya ekipmanı seçer ve Pi ile dosya/numune ücretini öder.",
+        st2T: "2. Analiz ve Teknik Katalog", st2D: "Mahsuller için SGS analizi, makineler ve araziler için teknik şartnameler.",
+        st3T: "3. Sözleşme ve Proforma", st3D: "Resmi FOB/CIF proforma faturasının (48 saat geçerli) düzenlenmesi ve sözleşme.",
+        st4T: "4. Lojistik ve Teslimat", st4D: "Menşe Şahadetnamesi, Sağlık Sertifikası ve Konşimento ile teslimat.",
+        buyerLabel: "Alıcı / Yatırımcı Bilgileri (Siparişten önce zorunludur):",
+        buyerPh: "Ad Soyad / Firma Adı / WhatsApp veya E-posta...",
+        tabAll: "Tümü (17)", tabSeeds: "Tahıllar ve Yağlı Tohumlar", tabGum: "Zamk ve Bitkiler", tabFruits: "Meyve, Hurma ve Baharat",
+        tabLands: "Arazi ve İhracat Lojistiği", tabEquipment: "Tarım Makineleri, Alet ve Gübre",
+        catTitle: "İhracat Ürünleri, Ekipman ve Yatırım Kataloğu",
+        sampleLabel: "Numune + Resmi Fiyat Teklifi",
+        serviceLabel: "Dosya İnceleme ve Teklif",
+        availText: "● Tedarike Hazır",
+        btnOrder: "Pi ile Talep Et",
+        btnAddList: "+ Liste",
+        supTitle: "Çiftçi, Fabrika, Tedarikçi ve Arazi Sahipleri Portalı",
+        supDesc: "İhracatlık ürününüz, yatırım araziniz, tarım makineniz veya gübreniz mi var? Alıcılarla buluşmak için kaydedin.",
+        supBtn: "Teklifi WhatsApp ile Gönder",
+        alertMissing: "Lütfen önce Adınızı/Firmanızı ve iletişim bilginizi girin."
+      }
+    };
 
-    function onIncompletePaymentFound(payment) {
-      if (payment.transaction && payment.transaction.txid) {
-        callBackend('complete', payment.identifier, payment.transaction.txid);
+    const cropsData = [
+      // 1-10: المحاصيل الزراعية
+      { id: "crop_sesame", cat: "seeds", type: "crop", price: 5,
+        ar: { tag: "حبوب وبذور", title: "السمسم الأبيض والأحمر", desc: "الذهب الأبيض للتصدير؛ نقاوة عالية ونسبة زيت مرتفعة لصناعة الطحينة والزيوت والمخبوزات.", specs: "نقاوة 99% — نسبة زيت +50% — تعبئة 50 كجم" },
+        en: { tag: "Oilseeds", title: "White & Red Sesame Seeds", desc: "High-purity export sesame with rich oil content, ideal for tahini, edible oils, and bakery industries.", specs: "Purity 99% — Oil +50% — 50kg PP Bags" },
+        tr: { tag: "Yağlı Tohumlar", title: "Beyaz ve Kırmızı Susam", desc: "Tahin, bitkisel yağ ve unlu mamuller için yüksek saflık ve yağ oranına sahip ihracatlık susam.", specs: "Saflık %99 — Yağ +%50 — 50 kg Çuval" }
+      },
+      { id: "crop_gum", cat: "gum", type: "crop", price: 7,
+        ar: { tag: "صمغ طبيعي", title: "الصمغ العربي (الهشاب والطلح)", desc: "منتج استراتيجي يدخل كعنصر أساسي في الصناعات الغذائية والمشروبات الغازية والأدوية.", specs: "خام منظف يدوياً أو مطحون — درجة أولى للتصدير" },
+        en: { tag: "Natural Gum", title: "Gum Arabic (Hashab & Talha)", desc: "Strategic natural emulsifier essential for global beverage, food, and pharmaceutical industries.", specs: "Hand-picked Cleaned / Powder — Grade A Export" },
+        tr: { tag: "Doğal Zamk", title: "Arap Zamkı (Hashab ve Talha)", desc: "Gıda, içecek ve ilaç endüstrileri için vazgeçilmez stratejik doğal hammadde.", specs: "El ile Temizlenmiş / Toz — 1. Sınıf İhracat" }
+      },
+      { id: "crop_peanut", cat: "seeds", type: "crop", price: 5,
+        ar: { tag: "حبوب وبذور", title: "الفول السوداني (مقشور وبقشره)", desc: "محصول نقدي عالي الجودة لصناعة الزبدة والحلويات واستخلاص زيوت الطعام الفاخرة.", specs: "خالٍ من الأفلاتوكسين — فرز آلي ويدوي" },
+        en: { tag: "Oilseeds", title: "Peanuts / Groundnuts", desc: "Premium export groundnuts (shelled & in-shell) for peanut butter, confectionery, and oil extraction.", specs: "Aflatoxin-free — Machine & Hand Sorted" },
+        tr: { tag: "Yağlı Tohumlar", title: "Yer Fıstığı (Kabuklu ve İç)", desc: "Fıstık ezmesi, şekerleme ve yağ üretimi için yüksek kaliteli ihracatlık yer fıstığı.", specs: "Aflatoksinsiz — Makine ve El Seçimi" }
+      },
+      { id: "crop_hibiscus", cat: "gum", type: "crop", price: 4,
+        ar: { tag: "أعشاب مجففة", title: "الكركديه (بتلات كاملة ومجروش)", desc: "بتلات مجففة طبيعية بلون قرمزي داكن ونكهة مميزة للمشروبات الطبيعية والأعشاب الطبية.", specs: "تجفيف ظلي طبيعي — رطوبة أقل من 10%" },
+        en: { tag: "Dried Herbs", title: "Hibiscus Flowers", desc: "Naturally shade-dried deep crimson petals in high demand for herbal teas and natural food coloring.", specs: "Natural Shade-Dried — Moisture < 10%" },
+        tr: { tag: "Kurutulmuş Bitki", title: "Hibiskus Çiçeği", desc: "Bitki çayları ve doğal gıda boyaları için yoğun renkli ve aromalı kurutulmuş yapraklar.", specs: "Doğal Gölge Kurutma — Nem <%10" }
+      },
+      { id: "crop_cotton", cat: "seeds", type: "crop", price: 6,
+        ar: { tag: "ألياف صناعية", title: "القطن طويل وقصير التيلة", desc: "ألياف طبيعية عالية المتانة والنقاء تُعد المادة الخام الأولى لأرقى مصانع الغزل والنسيج.", specs: "بالات مضغوطة قياسية — شهادات منشأ وجودة" },
+        en: { tag: "Fibers", title: "Long & Short Staple Cotton", desc: "High-strength pure natural cotton fibers for leading global spinning and textile mills.", specs: "Standard Pressed Bales — Origin & Quality Certs" },
+        tr: { tag: "Tekstil Elyafı", title: "Uzun ve Kısa Elyaflı Pamuk", desc: "İplik ve tekstil fabrikaları için yüksek mukavemetli saf doğal pamuk balyaları.", specs: "Standart Preslenmiş Balyalar — Menşe Sertifikalı" }
+      },
+      { id: "crop_sorghum", cat: "seeds", type: "crop", price: 4,
+        ar: { tag: "حبوب غذائية", title: "الذرة الرفيعة والدخن", desc: "حبوب غذائية أساسية عالية القيمة الغذائية تُصدّر للاستخدام البشري وكأعلاف مركزة.", specs: "أصناف بيضاء وصفراء — توريد بالحاويات" },
+        en: { tag: "Grains", title: "Sorghum & Millet", desc: "Nutrient-rich staple grains exported in bulk for human consumption and concentrated livestock feed.", specs: "White & Yellow Varieties — Container Bulk" },
+        tr: { tag: "Tahıllar", title: "Sorgum ve Darı", desc: "İnsan tüketimi ve yem sanayii için yüksek besin değerli ihracatlık tahıllar.", specs: "Beyaz ve Sarı Çeşitler — Konteyner Bazlı" }
+      },
+      { id: "crop_watermelon", cat: "seeds", type: "crop", price: 4,
+        ar: { tag: "بذور وتسالي", title: "حب البطيخ (التسالي)", desc: "بذور منتقاة بعناية تحظى بطلب واسع في أسواق الشرق الأوسط وأوروبا للتسالي والصناعات الغذائية.", specs: "أحجام موحدة — فرز ونظافة عالية" },
+        en: { tag: "Seeds", title: "Watermelon Seeds", desc: "Carefully graded seeds widely demanded across Middle Eastern and European snack markets.", specs: "Uniform Sizes — High Cleanliness" },
+        tr: { tag: "Çekirdek", title: "Karpuz Çekirdeği", desc: "Orta Doğu ve Avrupa kuruyemiş pazarlarında yoğun talep gören seçilmiş çekirdekler.", specs: "Standart Boyut — Yüksek Temizlik" }
+      },
+      { id: "crop_fruits", cat: "fruits", type: "crop", price: 5,
+        ar: { tag: "فواكه طازجة", title: "المانجو والموز والحمضيات", desc: "فواكه استوائية طازجة تُجهز وتُعبأ وفق معايير التبريد والتصدير السريع للأسواق الإقليمية.", specs: "تعبئة كرتونية مبردة — شحن جوي وبحري" },
+        en: { tag: "Fresh Fruits", title: "Mango, Banana & Citrus", desc: "Fresh tropical fruits packed under cold-chain standards for rapid regional and international export.", specs: "Reefer Carton Packing — Air & Sea Freight" },
+        tr: { tag: "Taze Meyve", title: "Mango, Muz ve Narenciye", desc: "Soğuk zincir standartlarında paketlenen taze tropikal meyveler.", specs: "Soğutmalı Koli Paketleme — Hava ve Deniz Kargo" }
+      },
+      { id: "crop_spices", cat: "fruits", type: "crop", price: 4,
+        ar: { tag: "توابل وبهارات", title: "الكمون والكزبرة والشطة", desc: "محاصيل عطرية مجففة طبيعياً تحتفظ بزيوتها الطيارة ونكهتها القوية للتوريد التجاري بالجملة.", specs: "حصاد موسمي جديد — خالية من الشوائب" },
+        en: { tag: "Spices", title: "Cumin, Coriander & Chili", desc: "Sun-dried aromatic spices retaining rich essential oils and strong flavor for wholesale supply.", specs: "New Seasonal Harvest — Impurity-Free" },
+        tr: { tag: "Baharatlar", title: "Kimyon, Kişniş ve Acı Biber", desc: "Toptan tedarik için uçucu yağlarını ve aromasını koruyan güneşte kurutulmuş baharatlar.", specs: "Yeni Sezon Hasat — Yabancı Maddesiz" }
+      },
+      { id: "crop_dates", cat: "fruits", type: "crop", price: 4,
+        ar: { tag: "تمور", title: "التمور الجافة ونصف الجافة", desc: "أصناف عالية الجودة قابلة للتخزين الطويل ومناسبة للتعبئة التجارية والتصدير المباشر.", specs: "عبوات 10 و 25 كجم — جاهزة للتصدير" },
+        en: { tag: "Dates", title: "Dry & Semi-Dry Dates", desc: "Long-shelf-life premium date varieties suited for commercial packaging and direct export.", specs: "10kg & 25kg Cartons — Export Ready" },
+        tr: { tag: "Hurma", title: "Kuru ve Yarı Kuru Hurma", desc: "Uzun raf ömrüne sahip, ticari paketleme ve ihracata uygun kaliteli hurma çeşitleri.", specs: "10 kg ve 25 kg Koliler — İhracata Hazır" }
+      },
+
+      // 11-13: قسم الأراضي والاستثمار والخدمات اللوجستية
+      { id: "srv_lands", cat: "lands", type: "land", price: 8,
+        ar: { tag: "أراضي واستثمار", title: "تأجير وشراء الأراضي الزراعية الاستثمارية", desc: "توفير مساحات زراعية خصبة مروية ومطرية بمساحات مختلفة مع مستندات الملكية الرسمية ودراسات الجدوى.", specs: "أراضٍ مروية ومطرية — عقود استثمار وشراكة موثقة" },
+        en: { tag: "Agri-Lands", title: "Agricultural Land Lease & Investment", desc: "Fertile irrigated and rain-fed agricultural lands with verified title deeds and feasibility studies.", specs: "Irrigated & Rain-fed — Verified Investment Contracts" },
+        tr: { tag: "Tarım Arazileri", title: "Yatırımlık Tarım Arazisi Kiralama ve Satış", desc: "Resmi tapulu, sulanabilir verimli tarım arazileri ve fizibilite etütleri.", specs: "Sulu ve Kuru Tarım — Onaylı Yatırım Sözleşmeleri" }
+      },
+      { id: "srv_contract_farming", cat: "lands", type: "land", price: 7,
+        ar: { tag: "زراعة تعاقدية", title: "باقات الزراعة التعاقدية المتكاملة للمستثمرين", desc: "تمويل وإدارة زراعة مساحات محددة لحساب المستورد (أرض + تقاوي + إشراف) وتسليم كامل المحصول عند الحصاد.", specs: "إدارة هندسية كاملة — ضمان تسليم المحصول للتصدير" },
+        en: { tag: "Contract Farming", title: "Turnkey Contract Farming Packages", desc: "End-to-end cultivation management (land + seeds + supervision) tailored to deliver 100% of harvest to buyer.", specs: "Full Agronomy Management — Export Harvest Guarantee" },
+        tr: { tag: "Sözleşmeli Tarım", title: "Anahtar Teslim Sözleşmeli Tarım Paketleri", desc: "Alıcı adına özel ekim yönetimi (arazi + tohum + denetim) ve hasadın tamamının ihracata teslimi.", specs: "Tam Ziraat Yönetimi — İhracat Hasat Garantisi" }
+      },
+      { id: "srv_logistics", cat: "lands", type: "land", price: 5,
+        ar: { tag: "خدمات لوجستية", title: "الفحص المخبري والتخليص الجمركي والشحن", desc: "إنجاز كافة معاملات التصدير، الفحص المخبري الدولي (SGS)، استخراج شهادات المنشأ، وحجز الحاويات.", specs: "تخليص متكامل — شحن FOB و CIF لجميع الموانئ" },
+        en: { tag: "Logistics & Lab", title: "SGS Lab Testing, Customs & Freight", desc: "Complete export documentation, international SGS certification, Certificate of Origin, and sea freight.", specs: "End-to-End Clearance — FOB & CIF Worldwide Shipping" },
+        tr: { tag: "Lojistik ve Analiz", title: "SGS Laboratuvar Analizi, Gümrükleme ve Nakliye", desc: "İhracat belgeleri, uluslararası SGS sertifikası, Menşe Şahadetnamesi ve konteyner taşımacılığı.", specs: "Tam Gümrükleme — Tüm Limanlara FOB ve CIF Teslim" }
+      },
+
+      // 14-17: قسم المعدات والآليات والأسمدة (4 بطاقات متخصصة)
+      { id: "eq_tractors", cat: "equipment", type: "equip", price: 6,
+        ar: { tag: "آليات ثقيلة", title: "الجرارات الزراعية والحاصدات والمحاريث", desc: "توريد الجرارات والحاصدات الحديثة (من المصانع التركية والدولية المعتمدة) مع توفر قطع الغيار والضمان.", specs: "قدرات حصانية متنوعة — شحن مباشر للمشاريع الزراعية" },
+        en: { tag: "Heavy Machinery", title: "Tractors, Harvesters & Plows", desc: "Supply of modern tractors and combine harvesters from certified Turkish and global manufacturers with spare parts.", specs: "Various Horsepower — Direct Export to Agri-Projects" },
+        tr: { tag: "Ağır Tarım Makineleri", title: "Traktörler, Biçerdöverler ve Pulluklar", desc: "Onaylı Türk ve uluslararası üreticilerden yedek parça garantili modern traktör ve biçerdöver tedariki.", specs: "Farklı Beygir Güçleri — Projelere Doğrudan Sevkiyat" }
+      },
+      { id: "eq_processing", cat: "equipment", type: "equip", price: 6,
+        ar: { tag: "خطوط إنتاج", title: "آلات الغربلة والفرز والتعبئة للمحاصيل", desc: "توريد خطوط تنظيف وغربلة السمسم والحبوب والفول السوداني وموازين التعبئة الآلية لرفع درجة النقاوة إلى 99.9%.", specs: "طاقة إنتاجية عالية — تركيب وتشغيل وتدريب" },
+        en: { tag: "Processing Lines", title: "Seed Cleaning, Sorting & Packing Lines", desc: "Sesame, grain, and peanut cleaning/grading lines and automated bagging scales to achieve 99.9% export purity.", specs: "High Capacity — Installation & Technical Support" },
+        tr: { tag: "Eleme ve Paketleme", title: "Tohum Eleme, Ayıklama ve Paketleme Hatları", desc: "%99.9 ihracat saflığı için susam, tahıl ve yer fıstığı temizleme/boylama hatları ve otomatik çuvallama.", specs: "Yüksek Kapasite — Kurulum ve Teknik Destek" }
+      },
+      { id: "eq_irrigation", cat: "equipment", type: "equip", price: 5,
+        ar: { tag: "أنظمة الري", title: "شبكات الري المحوري (Pivot) والتنقيط والمضخات", desc: "توريد أجهزة الري المحوري، شبكات التنقيط والرش، ومضخات المياه العاملة بالديزل والطاقة الشمسية.", specs: "تصميم هندسي حسب المساحة — توفير المياه والطاقة" },
+        en: { tag: "Irrigation Systems", title: "Center Pivot, Drip Irrigation & Solar Pumps", desc: "Supply of center pivot systems, drip/sprinkler networks, and solar/diesel water pumping stations.", specs: "Custom Area Engineering — Water & Energy Efficient" },
+        tr: { tag: "Sulama Sistemleri", title: "Center Pivot, Damla Sulama ve Güneş Pompaları", desc: "Center pivot sulama sistemleri, damla/yağmurlama hatları ve güneş enerjili su pompaları tedariki.", specs: "Araziye Özel Mühendislik — Su ve Enerji Tasarrufu" }
+      },
+      { id: "eq_fertilizers", cat: "equipment", type: "equip", price: 5,
+        ar: { tag: "أسمدة ومدخلات", title: "الأسمدة المركبة (NPK) واليوريا والمخصبات", desc: "توريد الأسمدة الكيميائية والعضوية المعتمدة (NPK، يوريا، داب، وعناصر صغرى) والتقاوي المحسنة بالجملة.", specs: "عبوات 25 و 50 كجم — شحن بالحاويات مع شهادات تحليل" },
+        en: { tag: "Fertilizers & Seeds", title: "NPK, Urea, Organic Fertilizers & Certified Seeds", desc: "Bulk supply of certified NPK, Urea, DAP, micronutrients, and high-yield hybrid seeds with lab certificates.", specs: "25kg & 50kg Bags — Container Bulk with COA" },
+        tr: { tag: "Gübre ve Tohum", title: "NPK, Üre, Organik Gübre ve Sertifikalı Tohum", desc: "Analiz sertifikalı NPK, Üre, DAP, mikro element gübreler ve yüksek verimli sertifikalı tohum tedariki.", specs: "25 kg ve 50 kg Torbalar — Analiz Sertifikalı Konteyner" }
+      }
+    ];
+
+    function updateCalc() {
+      const tons = parseFloat(document.getElementById("calc-tons").value) || 0;
+      const term = document.getElementById("calc-term").value;
+      const c20 = Math.ceil(tons / 19);
+      const qintars = (tons * 22.27).toFixed(1);
+      const out = document.getElementById("calc-output");
+      if (currentLang === "ar") {
+        out.innerText = `الكمية: ${tons} طن متري (${qintars} قنطار) | السعة التقديرية: ${c20} حاوية (20 قدم) | نظام التسليم: ${term} مع فحص جودة SGS معتمد.`;
+      } else if (currentLang === "en") {
+        out.innerText = `Quantity: ${tons} MT | Estimated Capacity: ${c20} x 20ft Container(s) | Term: ${term} with certified SGS lab inspection.`;
+      } else {
+        out.innerText = `Miktar: ${tons} Ton | Tahmini Kapasite: ${c20} x 20ft Konteyner | Teslim: ${term} onaylı SGS laboratuvar analizi ile.`;
       }
     }
+
+    function addToBasket(title) {
+      if (!basketItems.includes(title)) {
+        basketItems.push(title);
+      }
+      const bar = document.getElementById("basket-bar");
+      const countLbl = document.getElementById("basket-count");
+      bar.style.display = "flex";
+      countLbl.innerText = currentLang === "ar"
+        ? `${basketItems.length} بنود في قائمة الاستفسار`
+        : `${basketItems.length} item(s) selected`;
+    }
+
+    function sendBasketWhatsApp() {
+      const buyer = document.getElementById("buyer-info").value.trim() || "غير محدد";
+      const listStr = basketItems.map((item, idx) => `${idx + 1}. ${item}`).join("\n");
+      const msg = `طلب تسعيرة مجمعة - MONEEB CROPS 📋\n• العميل: ${buyer}\n• حساب Pi: ${currentPiUser}\n• البنود المطلوبة:\n${listStr}`;
+      window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    function renderCrops(filter = currentFilter) {
+      currentFilter = filter;
+      const grid = document.getElementById("crops-grid");
+      const t = uiText[currentLang];
+      grid.innerHTML = "";
+      cropsData.forEach(c => {
+        if (filter !== "all" && c.cat !== filter) return;
+        const item = c[currentLang];
+        let cardClass = "card";
+        let tagClass = "tag";
+        if (c.type === "land") { cardClass = "card land-card"; tagClass = "tag land-tag"; }
+        if (c.type === "equip") { cardClass = "card equip-card"; tagClass = "tag equip-tag"; }
+        const feeLabel = c.type === "crop" ? t.sampleLabel : t.serviceLabel;
+
+        grid.innerHTML += `
+          <div class="${cardClass}">
+            <div>
+              <div class="card-header">
+                <span class="${tagClass}">${item.tag}</span>
+                <span class="status-pill">${t.availText}</span>
+              </div>
+              <h3>${item.title}</h3>
+              <p>${item.desc}</p>
+              <div class="specs">${item.specs}</div>
+            </div>
+            <div>
+              <div class="price-row">
+                <span>${feeLabel}</span>
+                <span class="price">${c.price} Pi</span>
+              </div>
+              <div class="btn-group">
+                <button class="order-btn" onclick="orderCrop(${c.price}, '${item.title}', '${c.id}')">${t.btnOrder}</button>
+                <button class="cart-add-btn" onclick="addToBasket('${item.title}')">${t.btnAddList}</button>
+              </div>
+            </div>
+          </div>`;
+      });
+    }
+
+    function setLang(lang, btn) {
+      currentLang = lang;
+      document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const t = uiText[lang];
+      document.getElementById("html-root").setAttribute("dir", t.dir);
+      document.getElementById("html-root").setAttribute("lang", lang);
+      document.getElementById("hero-title").innerHTML = t.heroTitle;
+      document.getElementById("hero-sub").innerText = t.heroSub;
+      document.getElementById("kpi1").innerText = t.kpi1;
+      document.getElementById("kpi2").innerText = t.kpi2;
+      document.getElementById("kpi3").innerText = t.kpi3;
+      document.getElementById("kpi4").innerText = t.kpi4;
+      document.getElementById("about-title").innerText = t.aboutTitle;
+      document.getElementById("about-desc").innerText = t.aboutDesc;
+      document.getElementById("calc-title").innerText = t.calcTitle;
+      document.getElementById("lbl-tons").innerText = t.lblTons;
+      document.getElementById("lbl-incoterm").innerText = t.lblIncoterm;
+      document.getElementById("wf-title").innerText = t.wfTitle;
+      document.getElementById("st1-t").innerText = t.st1T; document.getElementById("st1-d").innerText = t.st1D;
+      document.getElementById("st2-t").innerText = t.st2T; document.getElementById("st2-d").innerText = t.st2D;
+      document.getElementById("st3-t").innerText = t.st3T; document.getElementById("st3-d").innerText = t.st3D;
+      document.getElementById("st4-t").innerText = t.st4T; document.getElementById("st4-d").innerText = t.st4D;
+      document.getElementById("buyer-label").innerText = t.buyerLabel;
+      document.getElementById("buyer-info").placeholder = t.buyerPh;
+      document.getElementById("tab-all").innerText = t.tabAll;
+      document.getElementById("tab-seeds").innerText = t.tabSeeds;
+      document.getElementById("tab-gum").innerText = t.tabGum;
+      document.getElementById("tab-fruits").innerText = t.tabFruits;
+      document.getElementById("tab-lands").innerText = t.tabLands;
+      document.getElementById("tab-equipment").innerText = t.tabEquipment;
+      document.getElementById("cat-title").innerText = t.catTitle;
+      document.getElementById("sup-title").innerText = t.supTitle;
+      document.getElementById("sup-desc").innerText = t.supDesc;
+      document.getElementById("sup-btn").innerText = t.supBtn;
+      updateCalc();
+      renderCrops(currentFilter);
+    }
+
+    function filterCrops(category, btn) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderCrops(category);
+    }
+
+    function registerSupplier() {
+      const name = document.getElementById("sup-name").value.trim();
+      const item = document.getElementById("sup-item").value.trim();
+      const contact = document.getElementById("sup-contact").value.trim();
+      if (!name || !item || !contact) {
+        alert(uiText[currentLang].alertMissing);
+        return;
+      }
+      const msg = `تسجيل مورد / مصنع / عرض جديد - MONEEB CROPS 🌱\n• الاسم: ${name}\n• العرض والكمية: ${item}\n• التواصل والموقع: ${contact}`;
+      window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    const Pi = window.Pi;
+    Pi.init({ version: "2.0" });
 
     async function auth() {
       try {
-        const scopes = ['username', 'payments'];
-        const authResult = await Pi.authenticate(scopes, onIncompletePaymentFound);
-        document.getElementById('user-status').innerText = "مرحباً بك: @" + authResult.user.username;
+        const authResult = await Pi.authenticate(['username', 'payments'], p => console.log(p));
+        currentPiUser = "@" + authResult.user.username;
+        document.getElementById("user-status").innerText = currentPiUser;
       } catch (err) {
-        document.getElementById('user-status').innerText = "يرجى الفتح داخل متصفح Pi Browser";
+        document.getElementById("user-status").innerText = "Pi Browser";
       }
     }
 
-    function payForService(amount, memo, itemId) {
+    function sendWhatsAppNotification(itemName, amount, buyer, txid) {
+      const tons = document.getElementById("calc-tons").value;
+      const term = document.getElementById("calc-term").value;
+      const msg = `New Order - MONEEB CROPS 🌾\n` +
+                  `• Item/Equipment: ${itemName}\n` +
+                  `• Est. Qty / Term: ${tons} MT (${term})\n` +
+                  `• Fee Paid: ${amount} Pi\n` +
+                  `• Pi User: ${currentPiUser}\n` +
+                  `• Client Info: ${buyer}\n` +
+                  `• TxID: ${txid || 'Confirmed'}`;
+      window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    async function callBackendPayment(action, paymentId, txid = null) {
+      try {
+        await fetch('/api/pi-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action, paymentId, txid })
+        });
+      } catch (e) {
+        console.error('Backend payment sync:', e);
+      }
+    }
+
+    function orderCrop(amount, itemName, itemId) {
+      const buyerInput = document.getElementById("buyer-info");
+      const buyer = buyerInput.value.trim();
+      if (!buyer) {
+        alert(uiText[currentLang].alertMissing);
+        buyerInput.focus();
+        return;
+      }
       Pi.createPayment({
         amount: amount,
-        memo: memo,
-        metadata: { itemId: itemId }
+        memo: `${itemName} - MONEEB CROPS`,
+        metadata: { itemId: itemId, buyer: buyer, user: currentPiUser, lang: currentLang }
       }, {
-        onReadyForServerApproval: async function(paymentId) {
-          await callBackend('approve', paymentId);
+        onReadyForServerApproval: function(paymentId) {
+          callBackendPayment('approve', paymentId);
         },
-        onReadyForServerCompletion: async function(paymentId, txid) {
-          await callBackend('complete', paymentId, txid);
-          alert("تمت عملية الدفع بنجاح لـ: " + memo);
+        onReadyForServerCompletion: function(paymentId, txid) {
+          callBackendPayment('complete', paymentId, txid);
+          sendWhatsAppNotification(itemName, amount, buyer, txid);
         },
-        onCancel: function(paymentId) {
-          alert("تم إلغاء العملية");
-        },
-        onError: function(error, payment) {
-          alert("خطأ في الدفع: " + error.message);
-        }
+        onCancel: function(paymentId) {},
+        onError: function(error) { alert(error.message); }
       });
     }
 
+    updateCalc();
+    renderCrops("all");
     auth();
   </script>
 </body>
