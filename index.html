@@ -333,4 +333,549 @@
       max-width: 1100px;
       margin: 40px auto 0;
       padding: 20px;
-      border-top: 1px
+      border-top: 1px solid var(--card-border);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .status-toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      border: 1px solid var(--gold);
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      z-index: 999;
+      display: none;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="top-bar">
+      <div class="brand">
+        <span class="gold">MONEEB</span> <span class="green">GLOBAL</span>
+      </div>
+      <div class="controls">
+        <div class="lang-switch">
+          <button class="lang-btn active" onclick="setLang('ar', this)">عربي</button>
+          <button class="lang-btn" onclick="setLang('en', this)">EN</button>
+          <button class="lang-btn" onclick="setLang('fr', this)">FR</button>
+          <button class="lang-btn" onclick="setLang('tr', this)">TR</button>
+        </div>
+        <div class="user-badge" id="piUserBadge">Pi Network...</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-tag" id="heroTag">GLOBAL B2B TRADE • UNIVERSITY ADMISSIONS • LOGISTICS</div>
+    <h1 id="heroTitle">بوابة منيب العالمية للتجارة والمنح الجامعية والخدمات</h1>
+    <p id="heroSub">منصة متكاملة مدعومة بشبكة Pi للمحاصيل الزراعية، القبولات والمنح الدراسية، والدعوات الطبية والتجارية.</p>
+  </section>
+
+  <!-- 3 Main Portals Navigation -->
+  <div class="portal-tabs">
+    <button class="tab-btn active" id="tab-crops" onclick="switchPortal('crops')">
+      🌾 <span id="tabCropsLabel">المحاصيل والمعدات</span>
+    </button>
+    <button class="tab-btn" id="tab-edu" onclick="switchPortal('edu')">
+      🎓 <span id="tabEduLabel">المنح والقبولات الجامعية</span>
+    </button>
+    <button class="tab-btn" id="tab-services" onclick="switchPortal('services')">
+      ✈️ <span id="tabServicesLabel">الدعوات والخدمات اللوجستية</span>
+    </button>
+  </div>
+
+  <!-- Dynamic Form Section -->
+  <section class="form-section">
+    <div class="form-box">
+      <div class="form-title" id="formHeaderTitle">📋 بيانات التاجر أو المستثمر (مطلوبة لإتمام الطلب)</div>
+      <div class="form-grid" id="dynamicFormFields">
+        <!-- Populated dynamically by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Catalog Section -->
+  <main class="catalog-container">
+    <div class="cards-grid" id="cardsGrid">
+      <!-- Populated dynamically by JS -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p id="footerText">© 2026 MONEEB GLOBAL • All Rights Reserved • Powered by Pi Network</p>
+  </footer>
+
+  <div class="status-toast" id="toastBox"></div>
+
+  <script>
+    // 1. Configuration & WhatsApp Number
+    const ADMIN_WHATSAPP = "905550654473";
+    let currentLang = "ar";
+    let currentPortal = "crops";
+    let piUsername = "Guest_Pioneer";
+
+    // 2. Initialize Pi SDK (Mainnet Production mode: sandbox: false)
+    try {
+      Pi.init({ version: "2.0", sandbox: false });
+      Pi.authenticate(["username", "payments"], function(incompletePayment) {
+        console.log("Incomplete payment found:", incompletePayment);
+      }).then(function(auth) {
+        piUsername = auth.user.username;
+        document.getElementById("piUserBadge").innerText = "@" + piUsername;
+      }).catch(function(err) {
+        console.warn("Pi Auth fallback:", err);
+        document.getElementById("piUserBadge").innerText = "Pi Browser";
+      });
+    } catch (e) {
+      console.warn("Pi SDK not loaded in standard browser");
+    }
+
+    // 3. Translations Dictionary (AR, EN, FR, TR)
+    const i18n = {
+      ar: {
+        dir: "rtl",
+        heroTitle: "بوابة منيب العالمية للتجارة والمنح الجامعية والخدمات",
+        heroSub: "منصة متكاملة مدعومة بشبكة Pi للمحاصيل الزراعية والمعدات، القبولات والمنح الدراسية، والدعوات الطبية والتجارية.",
+        tabCrops: "المحاصيل والمعدات",
+        tabEdu: "المنح والقبولات الجامعية",
+        tabServices: "الدعوات والخدمات اللوجستية",
+        orderBtn: "طلب عبر Pi",
+        footer: "© 2026 MONEEB GLOBAL • بوابة التجارة الدولية والخدمات التعليمية • مدعوم بشبكة Pi",
+        formTitles: {
+          crops: "📋 بيانات التاجر أو المستثمر (تُرسل تلقائياً بعد الدفع)",
+          edu: "🎓 بيانات الطالب الأكاديمية (تُرسل تلقائياً بعد الدفع)",
+          services: "✈️ بيانات طالب الخدمة أو الدعوة (تُرسل تلقائياً بعد الدفع)"
+        },
+        alertMissing: "يرجى إدخال الاسم ورقم الواتساب أولاً قبل إتمام الطلب."
+      },
+      en: {
+        dir: "ltr",
+        heroTitle: "MONEEB GLOBAL Portal for Trade, Scholarships & Services",
+        heroSub: "An integrated Pi-powered ecosystem for agricultural commodities, university admissions & grants, and medical/business invitations.",
+        tabCrops: "Crops & Equipment",
+        tabEdu: "Scholarships & Admissions",
+        tabServices: "Invitations & Logistics",
+        orderBtn: "Order via Pi",
+        footer: "© 2026 MONEEB GLOBAL • International Trade & Educational Services • Powered by Pi Network",
+        formTitles: {
+          crops: "📋 Buyer / Investor Details (Sent automatically after payment)",
+          edu: "🎓 Student Academic Profile (Sent automatically after payment)",
+          services: "✈️ Applicant / Client Details (Sent automatically after payment)"
+        },
+        alertMissing: "Please enter your Name and WhatsApp number first."
+      },
+      fr: {
+        dir: "ltr",
+        heroTitle: "Portail MONEEB GLOBAL : Commerce, Bourses & Services",
+        heroSub: "Une plateforme intégrée propulsée par Pi pour les produits agricoles, les bourses universitaires et les invitations médicales et commerciales.",
+        tabCrops: "Produits Agricoles & Équipements",
+        tabEdu: "Bourses & Admissions Universitaires",
+        tabServices: "Invitations & Logistique",
+        orderBtn: "Commander via Pi",
+        footer: "© 2026 MONEEB GLOBAL • Commerce International & Services Éducatifs • Propulsé par Pi Network",
+        formTitles: {
+          crops: "📋 Informations Acheteur / Investisseur (Envoyées après paiement)",
+          edu: "🎓 Profil Académique de l'Étudiant (Envoyé après paiement)",
+          services: "✈️ Informations du Demandeur / Client (Envoyées après paiement)"
+        },
+        alertMissing: "Veuillez d'abord saisir votre nom et votre numéro WhatsApp."
+      },
+      tr: {
+        dir: "ltr",
+        heroTitle: "MONEEB GLOBAL Ticaret, Burslar ve Hizmetler Portalı",
+        heroSub: "Tarım ürünleri, üniversite kabul ve bursları ile tıbbi/ticari davetiyeler için Pi destekli entegre platform.",
+        tabCrops: "Tarım Ürünleri & Ekipman",
+        tabEdu: "Üniversite Kabul & Burslar",
+        tabServices: "Davetiye & Lojistik Hizmetler",
+        orderBtn: "Pi ile Sipariş Ver",
+        footer: "© 2026 MONEEB GLOBAL • Uluslararası Ticaret ve Eğitim Hizmetleri • Pi Network Destekli",
+        formTitles: {
+          crops: "📋 Alıcı / Yatırımcı Bilgileri (Ödeme sonrası otomatik iletilir)",
+          edu: "🎓 Öğrenci Akademik Bilgileri (Ödeme sonrası otomatik iletilir)",
+          services: "✈️ Başvuru Sahibi Bilgileri (Ödeme sonrası otomatik iletilir)"
+        },
+        alertMissing: "Lütfen önce Adınızı ve WhatsApp numaranızı giriniz."
+      }
+    };
+
+    // 4. Data Catalog for All 3 Portals (AR, EN, FR, TR)
+    const catalogData = {
+      crops: [
+        {
+          id: "gum-arabic",
+          price: 2,
+          img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "تصدير B2B", en: "B2B Export", fr: "Export B2B", tr: "B2B İhracat" },
+          title: { ar: "الصمغ العربي (هشاب وطلح)", en: "Gum Arabic (Hashab & Talha)", fr: "Gomme Arabique (Hashab & Talha)", tr: "Arap Zamkı (Hashab & Talha)" },
+          desc: { ar: "صمغ عربي سوداني خام ومنظف بدرجة نقاء عالية للتصدير الصناعي والغذائي.", en: "Raw and cleaned Sudanese Gum Arabic for food & pharmaceutical export.", fr: "Gomme arabique soudanaise brute et nettoyée de haute pureté pour l'exportation.", tr: "Gıda ve ilaç ihracatı için yüksek saflıkta ham ve temizlenmiş Arap zamkı." }
+        },
+        {
+          id: "white-sesame",
+          price: 2,
+          img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "محاصيل زيتية", en: "Oilseeds", fr: "Graines Oléagineuses", tr: "Yağlı Tohumlar" },
+          title: { ar: "السمسم الأبيض القضارف", en: "Gedaref White Sesame Seeds", fr: "Graines de Sésame Blanc Gedaref", tr: "Gedaref Beyaz Susam Tohumu" },
+          desc: { ar: "سمسم أبيض عالي نسبة الزيت ومغربل جاهز للشحن بالحاويات.", en: "High-oil content white sesame seeds, machine-cleaned for container export.", fr: "Graines de sésame blanc à haute teneur en huile, prêtes pour l'exportation.", tr: "Konteyner ihracatına hazır, yüksek yağ oranlı beyaz susam." }
+        },
+        {
+          id: "peanuts",
+          price: 2,
+          img: "https://images.unsplash.com/photo-1525351326368-efbb5cb68147?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "حبوب ومكسرات", en: "Nuts & Grains", fr: "Grains & Arachides", tr: "Kuruyemiş & Tahıl" },
+          title: { ar: "الفول السوداني المقشور", en: "Shelled Groundnuts (Peanuts)", fr: "Arachides Décortiquées", tr: "Kabuksuz Yer Fıstığı" },
+          desc: { ar: "فول سوداني مفروز بعناية وخالٍ من الأفلاتوكسين مخصص للتحميص والزيوت.", en: "Carefully sorted aflatoxin-free peanuts for roasting and oil extraction.", fr: "Arachides triées sans aflatoxine pour la torréfaction et l'extraction d'huile.", tr: "Kavurma ve yağ üretimi için özenle seçilmiş yer fıstığı." }
+        },
+        {
+          id: "hibiscus",
+          price: 1.5,
+          img: "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "أعشاب طبيعية", en: "Natural Herbs", fr: "Herbes Naturelles", tr: "Doğal Bitkiler" },
+          title: { ar: "الكركديه الطبيعي المجفف", en: "Dried Natural Hibiscus Flowers", fr: "Fleurs d'Hibiscus Séchées", tr: "Kurutulmuş Doğal Hibiskus" },
+          desc: { ar: "زهور كركديه حمراء داكنة مجففة طبيعياً لشركات المشروبات والأغذية.", en: "Deep red sun-dried hibiscus petals for beverage and food industries.", fr: "Pétales d'hibiscus rouge foncé séchés au soleil pour boissons et alimentation.", tr: "İçecek ve gıda sanayisi için doğal kurutulmuş koyu kırmızı hibiskus." }
+        },
+        {
+          id: "agri-machinery",
+          price: 5,
+          img: "https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "معدات زراعية", en: "Agri Machinery", fr: "Machines Agricoles", tr: "Tarım Makineleri" },
+          title: { ar: "توريد الجرارات والمعدات الزراعية", en: "Tractors & Agricultural Machinery", fr: "Tracteurs & Machines Agricoles", tr: "Traktör ve Tarım Ekipmanları" },
+          desc: { ar: "وساطة استيراد جرارات ومعدات حصاد وخطوط غربلة وتعبئة من تركيا.", en: "Sourcing tractors, harvesters, and sorting/packaging lines from Türkiye.", fr: "Importation de tracteurs, moissonneuses et lignes de tri depuis la Turquie.", tr: "Türkiye'den traktör, biçerdöver ve eleme-paketleme hatları tedariki." }
+        },
+        {
+          id: "agri-lands",
+          price: 5,
+          img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "استثمار زراعي", en: "Agri Investment", fr: "Investissement Agricole", tr: "Tarım Yatırımı" },
+          title: { ar: "فرص استثمار الأراضي الزراعية", en: "Agricultural Land Investment", fr: "Investissement en Terres Agricoles", tr: "Tarım Arazisi Yatırım Fırsatları" },
+          desc: { ar: "دراسات جدوى وشراكات استصلاح أراضٍ خصبة لمشاريع الإنتاج الزراعي.", en: "Feasibility studies and partnerships for fertile agricultural land projects.", fr: "Études de faisabilité et partenariats pour projets agricoles rentables.", tr: "Verimli tarım arazileri için fizibilite ve yatırım ortaklıkları." }
+        }
+      ],
+      edu: [
+        {
+          id: "private-uni-admission",
+          price: 1,
+          img: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "قبول فوري", en: "Fast Admission", fr: "Admission Rapide", tr: "Hızlı Kabul" },
+          title: { ar: "القبول الجامعي المجاني (جامعات خاصة)", en: "Free Private University Admission", fr: "Admission Gratuite Universités Privées", tr: "Ücretsiz Özel Üniversite Kabulü" },
+          desc: { ar: "استخراج قبول مبدئي ونهائي في الجامعات التركية الخاصة بخصومات تصل إلى 75%.", en: "Conditional & final acceptance in Turkish private universities with up to 75% tuition discounts.", fr: "Acceptation dans les universités privées turques avec jusqu'à 75% de réduction.", tr: "Türkiye'deki özel üniversitelerde %75'e varan indirimlerle ön ve kesin kabul." }
+        },
+        {
+          id: "partial-scholarships",
+          price: 2,
+          img: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "خصم 50% - 100%", en: "50% - 100% Grant", fr: "Bourse 50% - 100%", tr: "%50 - %100 Burs" },
+          title: { ar: "باقة المنح الجزئية والمقاعد المدعومة", en: "Partial Scholarships & Supported Seats", fr: "Bourses Partielles & Places Subventionnées", tr: "Kısmi Burslar ve Destekli Kontenjanlar" },
+          desc: { ar: "ترشيح وتقديم على المقاعد المدعومة في التخصصات الطبية والهندسية والإدارية.", en: "Nomination and application for supported seats in Medicine, Engineering & Business.", fr: "Candidature aux places subventionnées en Médecine, Ingénierie et Gestion.", tr: "Tıp, Mühendislik ve İşletme bölümlerinde destekli kontenjanlara başvuru." }
+        },
+        {
+          id: "gov-scholarship",
+          price: 5,
+          img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "تجهيز شامل", en: "Full File Prep", fr: "Dossier Complet", tr: "Tam Dosya Hazırlığı" },
+          title: { ar: "التقديم المتكامل للمنح الحكومية", en: "Complete Government Scholarship Prep", fr: "Préparation Complète Bourses d'État", tr: "Devlet Bursları Tam Başvuru Paketi" },
+          desc: { ar: "تجهيز ملف المنحة التركية (Türkiye Bursları) وصياغة خطاب النوايا باحترافية.", en: "Full preparation for Türkiye Bursları & international grants including Motivation Letter.", fr: "Préparation complète pour Türkiye Bursları et rédaction de lettre de motivation.", tr: "Türkiye Bursları ve uluslararası burslar için niyet mektubu dahil tam dosya hazırlığı." }
+        },
+        {
+          id: "denklik-eq",
+          price: 3,
+          img: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "معادلة رسمية", en: "Official Denklik", fr: "Équivalence Officielle", tr: "Resmi Denklik" },
+          title: { ar: "معادلة الشهادات (Denklik)", en: "Diploma Equivalency (Denklik)", fr: "Équivalence des Diplômes (Denklik)", tr: "Diploma Denklik İşlemleri" },
+          desc: { ar: "حجز مواعيد ومتابعة استخراج معادلة الشهادة الثانوية أو الجامعية في تركيا.", en: "Appointment booking and processing for high school & university equivalency in Türkiye.", fr: "Prise de rendez-vous et suivi d'équivalence des diplômes en Turquie.", tr: "Türkiye'de lise ve üniversite diploma denklik randevusu ve takibi." }
+        },
+        {
+          id: "student-residence",
+          price: 3,
+          img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "باقة الوصول", en: "Arrival Package", fr: "Pack Arrivée", tr: "Karşılama Paketi" },
+          title: { ar: "الاستقبال والسكن والإقامة الطلابية", en: "Airport Pickup, Dorms & Student Permit", fr: "Accueil Aéroport, Logement & Titre de Séjour", tr: "Havalimanı Karşılama, Yurt & İkamet" },
+          desc: { ar: "استقبال من المطار، تأمين السكن الطلابي، التأمين الصحي، وملف الإقامة الطلابية.", en: "Airport transfer, student housing, health insurance, and student residence permit file.", fr: "Transfert aéroport, logement étudiant, assurance santé et dossier de résidence.", tr: "Havalimanı transferi, öğrenci yurdu, sağlık sigortası ve öğrenci ikamet dosyası." }
+        }
+      ],
+      services: [
+        {
+          id: "medical-invitation",
+          price: 3,
+          img: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "سياحة علاجية", en: "Medical Tourism", fr: "Tourisme Médical", tr: "Sağlık Turizmi" },
+          title: { ar: "استخراج دعوة طبية للعلاج في تركيا", en: "Official Medical Treatment Invitation", fr: "Invitation Médicale Officielle en Turquie", tr: "Türkiye Tedavi Amaçlı Resmi Davetiye" },
+          desc: { ar: "تنسيق مع مستشفيات معتمدة واستخراج دعوة طبية رسمية لتسهيل إجراءات التأشيرة.", en: "Coordination with accredited hospitals to issue official medical visa invitations.", fr: "Coordination avec des hôpitaux accrédités pour obtenir une invitation médicale.", tr: "Akredite hastanelerle koordinasyon ve vize için resmi tedavi davetiyesi." }
+        },
+        {
+          id: "business-invitation",
+          price: 3,
+          img: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "رجال أعمال", en: "B2B & Expos", fr: "Affaires & Salons", tr: "İş & Fuar" },
+          title: { ar: "دعوة تجارية وحضور المعارض الدولية", en: "Business & Trade Fair Invitation", fr: "Invitation d'Affaires & Foires Internationales", tr: "Ticari ve Uluslararası Fuar Davetiyesi" },
+          desc: { ar: "دعوات رسمية للتجار والمستثمرين لحضور المعارض التجارية وعقد الصفقات.", en: "Official invitations for merchants & investors attending trade fairs and B2B meetings.", fr: "Invitations officielles pour commerçants et investisseurs aux salons B2B.", tr: "Fuarlara ve B2B toplantılara katılacak iş insanları için resmi davetiye." }
+        },
+        {
+          id: "sworn-translation",
+          price: 2,
+          img: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "ترجمة ونوتر", en: "Sworn & Noter", fr: "Traduction Assermentée", tr: "Yeminli Tercüme" },
+          title: { ar: "الترجمة المحلفة وتصديق النوتر", en: "Sworn Translation & Notary Attestation", fr: "Traduction Assermentée & Notaire", tr: "Yeminli Tercüme ve Noter Tasdiki" },
+          desc: { ar: "ترجمة الوثائق والشهادات وجوازات السفر وتصديقها لدى كاتب العدل في إسطنبول.", en: "Certified translation of certificates & passports with Istanbul Notary attestation.", fr: "Traduction certifiée de diplômes et passeports avec légalisation notariale à Istanbul.", tr: "Sertifika ve pasaportların yeminli tercümesi ve İstanbul Noter onayı." }
+        },
+        {
+          id: "business-consulting",
+          price: 2,
+          img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&q=80",
+          badge: { ar: "استشارات وشحن", en: "Consulting & Cargo", fr: "Conseil & Fret", tr: "Danışmanlık & Kargo" },
+          title: { ar: "استشارات الاستيراد والشحن التجاري", en: "Import/Export & Cargo Consulting", fr: "Conseil Import/Export & Fret Commercial", tr: "İthalat/İhracat ve Kargo Danışmanlığı" },
+          desc: { ar: "فحص البضائع في المصانع، الشحن البحري والجوي، وتخليص المعاملات التجارية.", en: "Factory quality inspection, sea/air freight coordination, and trade consulting.", fr: "Inspection qualité en usine, fret maritime/aérien et conseil commercial.", tr: "Fabrika kalite kontrolü, deniz/hava kargo ve ticari işlem danışmanlığı." }
+        }
+      ]
+    };
+
+    // 5. Dynamic Form Builder per Portal
+    function renderForm() {
+      const container = document.getElementById("dynamicFormFields");
+      document.getElementById("formHeaderTitle").innerText = i18n[currentLang].formTitles[currentPortal];
+
+      const labels = {
+        ar: {
+          name: "الاسم الكامل *",
+          wa: "رقم الواتساب (مع مفتاح الدولة) *",
+          country: "الدولة / الجنسية",
+          qty: "الكمية المطلوبة / ملاحظات",
+          degree: "الدرجة العلمية",
+          major: "التخصص المطلوب والمعدل",
+          serviceDate: "الموعد المقترح / تفاصيل الطلب"
+        },
+        en: {
+          name: "Full Name *",
+          wa: "WhatsApp Number (with country code) *",
+          country: "Country / Nationality",
+          qty: "Required Quantity / Notes",
+          degree: "Academic Degree",
+          major: "Desired Major & GPA",
+          serviceDate: "Preferred Date / Details"
+        },
+        fr: {
+          name: "Nom Complet *",
+          wa: "Numéro WhatsApp (avec indicatif) *",
+          country: "Pays / Nationalité",
+          qty: "Quantité Souhaitée / Notes",
+          degree: "Niveau d'Études",
+          major: "Spécialité & Moyenne",
+          serviceDate: "Date Souhaitée / Détails"
+        },
+        tr: {
+          name: "Ad Soyad *",
+          wa: "WhatsApp Numarası (Ülke kodu ile) *",
+          country: "Ülke / Uyruk",
+          qty: "Talep Edilen Miktar / Notlar",
+          degree: "Eğitim Derecesi",
+          major: "İstenen Bölüm ve Not Ortalaması",
+          serviceDate: "Tercih Edilen Tarih / Detaylar"
+        }
+      }[currentLang];
+
+      let extraFields = "";
+      if (currentPortal === "crops") {
+        extraFields = `
+          <div class="form-group">
+            <label>${labels.country}</label>
+            <input type="text" id="fieldExtra1" placeholder="Sudan / Türkiye / Sénégal..." />
+          </div>
+          <div class="form-group">
+            <label>${labels.qty}</label>
+            <input type="text" id="fieldExtra2" placeholder="20 Tons / 1 Container..." />
+          </div>
+        `;
+      } else if (currentPortal === "edu") {
+        extraFields = `
+          <div class="form-group">
+            <label>${labels.degree}</label>
+            <select id="fieldExtra1">
+              <option value="Bachelor / Licence / بكالوريوس">Bachelor / Licence / بكالوريوس</option>
+              <option value="Master / ماجستير">Master / ماجستير</option>
+              <option value="PhD / Doctorat / دكتوراه">PhD / Doctorat / دكتوراه</option>
+              <option value="Language / Langue / دراسة لغة">Language / Langue / دراسة لغة</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>${labels.major}</label>
+            <input type="text" id="fieldExtra2" placeholder="Medicine / Engineering - 85%" />
+          </div>
+        `;
+      } else {
+        extraFields = `
+          <div class="form-group">
+            <label>${labels.country}</label>
+            <input type="text" id="fieldExtra1" placeholder="Nationality / Pays" />
+          </div>
+          <div class="form-group">
+            <label>${labels.serviceDate}</label>
+            <input type="text" id="fieldExtra2" placeholder="Next Month / Urgent..." />
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        <div class="form-group">
+          <label>${labels.name}</label>
+          <input type="text" id="custName" required />
+        </div>
+        <div class="form-group">
+          <label>${labels.wa}</label>
+          <input type="tel" id="custWa" placeholder="+90..." required />
+        </div>
+        ${extraFields}
+      `;
+    }
+
+    // 6. Render Cards for Active Portal
+    function renderCards() {
+      const grid = document.getElementById("cardsGrid");
+      const items = catalogData[currentPortal];
+      const btnText = i18n[currentLang].orderBtn;
+
+      grid.innerHTML = items.map(item => `
+        <div class="card">
+          <img class="card-img" src="${item.img}" alt="${item.title[currentLang]}" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80';" />
+          <div class="card-body">
+            <span class="card-badge">${item.badge[currentLang]}</span>
+            <h3 class="card-title">${item.title[currentLang]}</h3>
+            <p class="card-desc">${item.desc[currentLang]}</p>
+            <div class="card-footer">
+              <span class="price-tag">${item.price} Pi</span>
+              <button class="btn-pi" onclick="startPiOrder('${item.id}', ${item.price})">${btnText}</button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // 7. Switch Portal Tab
+    function switchPortal(portal) {
+      currentPortal = portal;
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      document.getElementById("tab-" + portal).classList.add("active");
+      renderForm();
+      renderCards();
+    }
+
+    // 8. Switch Language
+    function setLang(lang, btnElement) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.documentElement.dir = i18n[lang].dir;
+
+      document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
+      if (btnElement) btnElement.classList.add("active");
+
+      document.getElementById("heroTitle").innerText = i18n[lang].heroTitle;
+      document.getElementById("heroSub").innerText = i18n[lang].heroSub;
+      document.getElementById("tabCropsLabel").innerText = i18n[lang].tabCrops;
+      document.getElementById("tabEduLabel").innerText = i18n[lang].tabEdu;
+      document.getElementById("tabServicesLabel").innerText = i18n[lang].tabServices;
+      document.getElementById("footerText").innerText = i18n[lang].footer;
+
+      renderForm();
+      renderCards();
+    }
+
+    // 9. Pi Payment + WhatsApp Dispatch
+    function showToast(msg) {
+      const box = document.getElementById("toastBox");
+      box.innerText = msg;
+      box.style.display = "block";
+      setTimeout(() => { box.style.display = "none"; }, 4500);
+    }
+
+    function sendToWhatsApp(itemTitle, amount, txid) {
+      const name = document.getElementById("custName").value.trim();
+      const wa = document.getElementById("custWa").value.trim();
+      const extra1 = document.getElementById("fieldExtra1") ? document.getElementById("fieldExtra1").value.trim() : "";
+      const extra2 = document.getElementById("fieldExtra2") ? document.getElementById("fieldExtra2").value.trim() : "";
+
+      const msg = `*MONEEB GLOBAL - New Order (${currentLang.toUpperCase()})*%0A` +
+        `--------------------------%0A` +
+        `*Section:* ${currentPortal.toUpperCase()}%0A` +
+        `*Service/Product:* ${itemTitle}%0A` +
+        `*Paid Amount:* ${amount} Pi%0A` +
+        `*Pi User:* @${piUsername}%0A` +
+        `*Client Name:* ${name}%0A` +
+        `*Client WhatsApp:* ${wa}%0A` +
+        `*Detail 1:* ${extra1}%0A` +
+        `*Detail 2:* ${extra2}%0A` +
+        `*TXID:* ${txid || "Pending/Test"}`;
+
+      window.location.href = `https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`;
+    }
+
+    function startPiOrder(itemId, amount) {
+      const name = document.getElementById("custName").value.trim();
+      const wa = document.getElementById("custWa").value.trim();
+
+      if (!name || !wa) {
+        alert(i18n[currentLang].alertMissing);
+        document.getElementById("custName").focus();
+        return;
+      }
+
+      const item = catalogData[currentPortal].find(i => i.id === itemId);
+      const itemTitle = item.title[currentLang];
+
+      if (typeof Pi === "undefined") {
+        showToast("Opening WhatsApp fallback...");
+        sendToWhatsApp(itemTitle, amount, "DIRECT-WA");
+        return;
+      }
+
+      showToast("Connecting to Pi Wallet...");
+
+      Pi.createPayment({
+        amount: amount,
+        memo: `MONEEB GLOBAL: ${item.title.en}`,
+        metadata: { portal: currentPortal, itemId: itemId, clientName: name, clientWa: wa }
+      }, {
+        onReadyForServerApproval: function(paymentId) {
+          fetch("/api/pi-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "approve", paymentId: paymentId })
+          });
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          fetch("/api/pi-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "complete", paymentId: paymentId, txid: txid })
+          }).then(() => {
+            showToast("Payment Completed! Redirecting to WhatsApp...");
+            sendToWhatsApp(itemTitle, amount, txid);
+          });
+        },
+        onCancel: function(paymentId) {
+          showToast("Payment cancelled.");
+        },
+        onError: function(error, payment) {
+          console.error(error);
+          showToast("Payment error. Redirecting to WhatsApp...");
+          sendToWhatsApp(itemTitle, amount, "ERROR-FALLBACK");
+        }
+      });
+    }
+
+    // Initial Render
+    renderForm();
+    renderCards();
+  </script>
+</body>
+</html>
