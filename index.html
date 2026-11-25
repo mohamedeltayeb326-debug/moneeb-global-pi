@@ -57,4 +57,689 @@
             </div>
             
             <div class="flex items-center gap-2">
-                <span id="piUserBadge" class="inline-flex items-
+                <span id="piUserBadge" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-900/80 border border-gold/30 text-[11px] text-gold font-english">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span id="piUsername">Pioneer</span>
+                </span>
+                <button onclick="toggleLanguage()" class="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold flex items-center gap-1.5 border border-white/15 transition">
+                    <i data-lucide="globe" class="w-3.5 h-3.5 text-gold"></i>
+                    <span id="langLabel">English</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- شريط الأسعار المباشر -->
+        <div class="bg-agriBlue px-4 py-1.5 text-[11px] text-sand flex items-center justify-between overflow-x-auto hide-scrollbar whitespace-nowrap gap-4 border-t border-white/10">
+            <span class="flex items-center gap-1"><span class="text-gold font-bold">1 Pi</span> ≈ 0.250 USD</span>
+            <span>•</span>
+            <span data-i18n="sesameTicker">السمسم الأبيض (القضارف): <strong class="text-gold">420 Pi</strong> / قنطار</span>
+            <span>•</span>
+            <span data-i18n="gumTicker">الصمغ العربي (هشاب): <strong class="text-gold">680 Pi</strong> / قنطار</span>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="px-4 pt-4 max-w-lg mx-auto">
+
+        <!-- شريط التنبيهات والحالة -->
+        <div id="statusToast" class="hidden mb-4 rounded-xl p-3 text-xs font-semibold border shadow-sm transition-all"></div>
+
+        <!-- ========================================== -->
+        <!-- التبويب 1: الرئيسية (HOME) -->
+        <!-- ========================================== -->
+        <div id="tab-home" class="tab-content space-y-6">
+            <!-- شريط البحث -->
+            <div class="relative">
+                <input type="text" onclick="switchTab('market')" readonly data-i18n-placeholder="searchPlaceholder" placeholder="ابحث عن سمسم، صمغ عربي، معدات، أراضٍ..." 
+                    class="w-full bg-white border border-forest/15 rounded-xl py-3 px-4 pr-10 text-sm shadow-sm focus:outline-none cursor-pointer">
+                <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute top-3.5 right-3.5"></i>
+            </div>
+
+            <!-- البانر الرئيسي -->
+            <section class="rounded-2xl bg-gradient-to-br from-forest via-forest to-agriBlue text-white p-5 shadow-lg relative overflow-hidden">
+                <div class="relative z-10 space-y-2">
+                    <span class="inline-block px-2.5 py-0.5 rounded-full bg-gold/20 text-gold text-[11px] font-bold border border-gold/30" data-i18n="piBadge">
+                        مدعوم بمنظومة Pi Network
+                    </span>
+                    <h2 class="text-xl font-extrabold leading-snug" data-i18n="heroTitle">السوق الزراعي السوداني</h2>
+                    <p class="text-xs text-sand/90 leading-relaxed" data-i18n="heroDesc">
+                        من أرض السودان إلى الأسواق العالمية. محاصيل تصديرية، معدات، أراضٍ، وعقود تجارية رقمية موثقة.
+                    </p>
+                    <div class="pt-2 flex gap-2.5">
+                        <button onclick="openActionModal('rfq', 'طلب عرض سعر مخصص (RFQ)')" class="bg-gold text-forest font-bold text-xs px-4 py-2.5 rounded-xl shadow hover:brightness-105 transition flex items-center gap-1.5">
+                            <i data-lucide="file-text" class="w-4 h-4"></i>
+                            <span data-i18n="btnQuote">طلب عرض سعر RFQ</span>
+                        </button>
+                        <button onclick="openActionModal('sell', 'إدراج محصول جديد في السوق')" class="bg-white/15 text-white font-semibold text-xs px-4 py-2.5 rounded-xl border border-white/20 hover:bg-white/25 transition" data-i18n="btnSell">
+                            اعرض محصولك
+                        </button>
+                    </div>
+                </div>
+                <div class="absolute -bottom-6 -left-6 w-28 h-28 rounded-full bg-gold/10 blur-xl"></div>
+            </section>
+
+            <!-- أقسام السوق الرئيسية -->
+            <section>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold text-forest text-base" data-i18n="secCategories">أقسام المنظومة</h3>
+                    <button onclick="switchTab('market')" class="text-xs text-agriBlue font-semibold" data-i18n="viewAll">عرض الكل</button>
+                </div>
+                <div class="grid grid-cols-4 gap-2.5 text-center">
+                    <div onclick="filterMarket('crops')" class="bg-white p-3 rounded-xl shadow-sm border border-forest/5 flex flex-col items-center gap-1.5 cursor-pointer hover:border-gold transition">
+                        <div class="w-10 h-10 rounded-full bg-forest/10 text-forest flex items-center justify-center">
+                            <i data-lucide="wheat" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-800" data-i18n="catCrops">المحاصيل</span>
+                    </div>
+                    <div onclick="filterMarket('equipment')" class="bg-white p-3 rounded-xl shadow-sm border border-forest/5 flex flex-col items-center gap-1.5 cursor-pointer hover:border-gold transition">
+                        <div class="w-10 h-10 rounded-full bg-gold/15 text-amber-800 flex items-center justify-center">
+                            <i data-lucide="tractor" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-800" data-i18n="catEquip">المعدات</span>
+                    </div>
+                    <div onclick="filterMarket('inputs')" class="bg-white p-3 rounded-xl shadow-sm border border-forest/5 flex flex-col items-center gap-1.5 cursor-pointer hover:border-gold transition">
+                        <div class="w-10 h-10 rounded-full bg-agriBlue/10 text-agriBlue flex items-center justify-center">
+                            <i data-lucide="sprout" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-800" data-i18n="catInputs">الأسمدة</span>
+                    </div>
+                    <div onclick="switchTab('invest')" class="bg-white p-3 rounded-xl shadow-sm border border-forest/5 flex flex-col items-center gap-1.5 cursor-pointer hover:border-gold transition">
+                        <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                            <i data-lucide="map-pin" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-800" data-i18n="catLand">الأراضي</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- محاصيل التصدير المميزة -->
+            <section>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-bold text-forest text-base" data-i18n="secFeatured">محاصيل ذات أولوية تصديرية</h3>
+                    <button onclick="switchTab('market')" class="text-xs text-forest font-bold underline">10 محاصيل ←</button>
+                </div>
+                <div id="featuredCropsContainer" class="space-y-3"></div>
+            </section>
+
+            <!-- طلبات الشراء المباشرة -->
+            <section class="bg-white rounded-2xl p-4 shadow-sm border border-gold/40">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-gold animate-pulse"></span>
+                        <h3 class="font-bold text-forest text-sm" data-i18n="secBuyers">طلبات شراء نشطة (Buyers Requests)</h3>
+                    </div>
+                    <button onclick="openActionModal('rfq', 'إضافة طلب شراء جديد')" class="text-xs text-forest font-bold underline" data-i18n="postRequest">+ أضف طلباً</button>
+                </div>
+                <div class="bg-sand/70 rounded-xl p-3 border border-forest/10 space-y-2">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] bg-agriBlue text-white px-2 py-0.5 rounded font-semibold">طلب تصدير • الإمارات</span>
+                            <h4 class="font-bold text-xs text-gray-900 mt-1">مطلوب 40 طن سمسم أحمر أو أبيض - تسليم بورتسودان</h4>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px] text-gray-600 pt-1">
+                        <span>الدفع: اتفاق رقمي + Pi</span>
+                        <button onclick="openActionModal('rfq', 'تقديم عرض سعر: 40 طن سمسم')" class="text-forest font-bold hover:underline">تقديم عرض سعر ←</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ميزة التوثيق والاتفاق الرقمي -->
+            <section class="bg-agriBlue text-white rounded-2xl p-4 shadow-sm flex items-center justify-between gap-3">
+                <div class="space-y-1">
+                    <h4 class="font-bold text-sm text-gold flex items-center gap-1.5">
+                        <i data-lucide="file-check-2" class="w-4 h-4"></i>
+                        <span data-i18n="web3Title">سجل الاتفاقات الرقمية و QR</span>
+                    </h4>
+                    <p class="text-[11px] text-sand/85 leading-relaxed" data-i18n="web3Desc">
+                        كل صفقة تُوثق باتفاق رقمي يحدد الكمية والجودة وموعد التسليم، مع رمز QR لتتبع مصدر المحصول.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- التبويب 2: السوق الكامل (MARKET) -->
+        <!-- ========================================== -->
+        <div id="tab-market" class="tab-content hidden space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg font-extrabold text-forest">سوق Sudan Agro المتكامل</h2>
+                <span class="text-[11px] bg-gold/20 text-amber-900 px-2.5 py-1 rounded-full font-bold">تحديث يومي</span>
+            </div>
+
+            <!-- أزرار التصفية -->
+            <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+                <button onclick="renderMarketList('all')" class="filter-btn bg-forest text-white text-xs font-bold px-3.5 py-2 rounded-xl shrink-0">الكل (13)</button>
+                <button onclick="renderMarketList('crops')" class="filter-btn bg-white text-gray-700 border border-forest/15 text-xs font-bold px-3.5 py-2 rounded-xl shrink-0">🌾 المحاصيل (10)</button>
+                <button onclick="renderMarketList('equipment')" class="filter-btn bg-white text-gray-700 border border-forest/15 text-xs font-bold px-3.5 py-2 rounded-xl shrink-0">🚜 المعدات</button>
+                <button onclick="renderMarketList('inputs')" class="filter-btn bg-white text-gray-700 border border-forest/15 text-xs font-bold px-3.5 py-2 rounded-xl shrink-0">🌱 الأسمدة</button>
+            </div>
+
+            <!-- قائمة المنتجات -->
+            <div id="fullMarketList" class="space-y-3"></div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- التبويب 3: الاستثمار والأراضي (INVEST) -->
+        <!-- ========================================== -->
+        <div id="tab-invest" class="tab-content hidden space-y-4">
+            <div class="bg-forest text-white rounded-2xl p-4 shadow-md">
+                <h2 class="text-base font-extrabold text-gold">الأراضي والاستثمار الزراعي</h2>
+                <p class="text-xs text-sand/90 mt-1">فرص شراكة زراعية، أراضٍ خصبة للتمليك والإيجار، ومشاريع صادرات في السودان.</p>
+            </div>
+
+            <div class="space-y-3">
+                <!-- مشروع 1 -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-forest/10 space-y-2.5">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-800">أرض زراعية • مشروع الجزيرة</span>
+                        <span class="text-xs font-bold text-forest">500 فدان</span>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-900">أرض زراعية مروية جاهزة لزراعة القطن والسمسم</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">متصلة بقنوات الري الرئيسية، تربة طينية خصبة، صك ملكية موثق، متاحة للإيجار الموسمي أو الشراكة.</p>
+                    <div class="pt-2 border-t flex items-center justify-between">
+                        <span class="text-xs font-bold text-agriBlue">الاستثمار من: 25,000 Pi</span>
+                        <button onclick="openActionModal('invest', 'معاينة أرض 500 فدان - مشروع الجزيرة')" class="bg-gold text-forest text-xs font-bold px-3.5 py-2 rounded-xl">طلب ملف المشروع</button>
+                    </div>
+                </div>
+
+                <!-- مشروع 2 -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-forest/10 space-y-2.5">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded bg-gold/20 text-amber-900">تصنيع وتعبئة • القضارف</span>
+                        <span class="text-xs font-bold text-forest">محطة غربلة</span>
+                    </div>
+                    <h3 class="font-bold text-sm text-gray-900">تطوير خط تنظيف وتعبئة السمسم للتصدير</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">رفع نقاوة السمسم إلى 99.9% وتعبئته في أكياس تصديرية مع ترميز QR للتصدير المباشر عبر بورتسودان.</p>
+                    <div class="pt-2 border-t flex items-center justify-between">
+                        <span class="text-xs font-bold text-agriBlue">حصة الشراكة: 15,000 Pi</span>
+                        <button onclick="openActionModal('invest', 'دراسة مشروع محطة غربلة القضارف')" class="bg-gold text-forest text-xs font-bold px-3.5 py-2 rounded-xl">طلب دراسة الجدوى</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- التبويب 4: طلباتي وسجل العقود (ORDERS & QR) -->
+        <!-- ========================================== -->
+        <div id="tab-orders" class="tab-content hidden space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-extrabold text-forest">سجل الاتفاقات الرقمية</h2>
+                    <p class="text-xs text-gray-500">العقود الموثقة ورموز QR لتتبع الصفقات</p>
+                </div>
+                <span id="ordersCountBadge" class="bg-forest text-gold font-bold text-xs px-3 py-1 rounded-full">1 اتفاق</span>
+            </div>
+
+            <div id="ordersListContainer" class="space-y-3"></div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- التبويب 5: حسابي (ACCOUNT) -->
+        <!-- ========================================== -->
+        <div id="tab-account" class="tab-content hidden space-y-4">
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-forest/10 text-center space-y-2">
+                <div class="w-16 h-16 rounded-2xl bg-forest text-gold font-extrabold text-2xl flex items-center justify-center mx-auto shadow">
+                    M
+                </div>
+                <h2 id="accountUsername" class="font-bold text-base text-gray-900 font-english">@Pioneer</h2>
+                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
+                    <i data-lucide="badge-check" class="w-4 h-4"></i> حساب متصل بشبكة Pi Network
+                </span>
+            </div>
+
+            <div class="bg-white rounded-2xl divide-y divide-gray-100 shadow-sm border border-forest/10 text-sm">
+                <div class="p-4 flex items-center justify-between">
+                    <span class="font-semibold text-gray-700">حالة الشبكة</span>
+                    <span class="text-xs font-bold px-2.5 py-1 rounded bg-amber-100 text-amber-800 font-english">Pi Testnet / Sandbox</span>
+                </div>
+                <div class="p-4 flex items-center justify-between">
+                    <span class="font-semibold text-gray-700">توثيق البائع / المصدر</span>
+                    <button onclick="openActionModal('verify', 'طلب توثيق حساب مزارع / مورد')" class="text-xs font-bold text-forest underline">تقديم مستندات التوثيق</button>
+                </div>
+                <div class="p-4 flex items-center justify-between">
+                    <span class="font-semibold text-gray-700">إعادة الاتصال بمحفظة Pi</span>
+                    <button onclick="authenticatePiUser()" class="bg-forest text-white text-xs font-bold px-3 py-1.5 rounded-lg">تحديث الاتصال</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 7. شريط التنقل السفلي (5 عناصر تفاعلية) -->
+    <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 px-2 py-2 z-50 shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
+        <div class="max-w-lg mx-auto grid grid-cols-5 text-center">
+            <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex flex-col items-center gap-1 text-forest font-bold">
+                <i data-lucide="home" class="w-5 h-5"></i>
+                <span class="text-[10px]" data-i18n="navHome">الرئيسية</span>
+            </button>
+            <button onclick="switchTab('market')" id="nav-market" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-forest transition">
+                <i data-lucide="store" class="w-5 h-5"></i>
+                <span class="text-[10px]" data-i18n="navMarket">السوق</span>
+            </button>
+            <button onclick="switchTab('invest')" id="nav-invest" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-forest transition">
+                <i data-lucide="trending-up" class="w-5 h-5"></i>
+                <span class="text-[10px]" data-i18n="navInvest">الاستثمار</span>
+            </button>
+            <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-forest transition relative">
+                <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+                <span class="text-[10px]" data-i18n="navOrders">طلباتي</span>
+            </button>
+            <button onclick="switchTab('account')" id="nav-account" class="nav-btn flex flex-col items-center gap-1 text-gray-400 hover:text-forest transition">
+                <i data-lucide="user-circle" class="w-5 h-5"></i>
+                <span class="text-[10px]" data-i18n="navAccount">حسابي</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- نافذة تفاعلية لإنشاء طلب صفقة والدفع بـ Pi -->
+    <div id="actionModal" class="fixed inset-0 bg-black/60 z-50 hidden items-end sm:items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl p-5 space-y-4">
+            <div class="flex items-center justify-between border-b pb-3">
+                <h3 id="modalTitle" class="font-bold text-forest text-base">إنشاء اتفاق رقمي / طلب صفقة</h3>
+                <button onclick="closeModal()" class="p-1 rounded-lg bg-gray-100 text-gray-600">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="space-y-3 text-sm">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">المحصول / تفاصيل الطلب</label>
+                    <input id="modalProduct" type="text" class="w-full border rounded-xl px-3 py-2 bg-sand/40 font-semibold" value="سمسم أبيض منظف">
+                </div>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">الكمية (بالطن / الوحدة)</label>
+                        <input id="modalQuantity" type="number" value="5" min="1" class="w-full border rounded-xl px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">ميناء / مكان التسليم</label>
+                        <select id="modalLocation" class="w-full border rounded-xl px-3 py-2 bg-white">
+                            <option value="بورتسودان (تصدير)">بورتسودان (تصدير)</option>
+                            <option value="القضارف">القضارف</option>
+                            <option value="الأبيض">الأبيض</option>
+                            <option value="مدني / الجزيرة">مدني / الجزيرة</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bg-forest/5 p-3 rounded-xl border border-forest/15 text-xs space-y-1">
+                    <div class="flex justify-between">
+                        <span>رسوم توثيق الاتفاق الرقمي (Pi):</span>
+                        <strong class="text-forest font-english">1.0 Pi</strong>
+                    </div>
+                    <p class="text-[10px] text-gray-500">يتم تسجيل الاتفاق في سجل المنصة وتوليد رمز QR للمتابعة عبر شبكة Pi.</p>
+                </div>
+                <button id="payPiBtn" onclick="startPiAgreementPayment()" class="w-full bg-gold text-forest font-extrabold py-3 rounded-xl shadow hover:brightness-105 transition flex items-center justify-center gap-2">
+                    <span>تأكيد الاتفاق والدفع عبر Pi (1 Pi)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة عرض شهادة الاتفاق الرقمي ورمز QR -->
+    <div id="qrModal" class="fixed inset-0 bg-black/70 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-2xl p-5 text-center space-y-3 border-2 border-gold">
+            <div class="flex justify-between items-center border-b pb-2">
+                <span class="text-xs font-bold text-forest">شهادة تتبع الاتفاق الرقمي</span>
+                <button onclick="document.getElementById('qrModal').classList.add('hidden')" class="p-1 bg-gray-100 rounded-lg">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div id="qrImageContainer" class="py-2 flex justify-center"></div>
+            <div id="qrDetails" class="text-xs text-gray-700 space-y-1 bg-sand/60 p-3 rounded-xl text-right"></div>
+            <p class="text-[10px] text-gray-500">امسح رمز QR للتحقق من بيانات الدفعة والمصدر والاتفاق الرقمي على MONEEB GLOBAL.</p>
+        </div>
+    </div>
+
+    <script>
+        // قاعدة بيانات المنتجات والمحاصيل السودانية الـ 10 + المعدات والأسمدة
+        const marketItems = [
+            { id: '01', cat: 'crops', icon: '🌾', origin: 'القضارف • صادر', name: 'سمسم أبيض منظف (نقاوة 99%)', min: 'الحد الأدنى: 1 طن (22 قنطار)', price: '9,240 Pi / طن', featured: true },
+            { id: '02', cat: 'crops', icon: '🌳', origin: 'كردفان • هشاب', name: 'صمغ عربي هشاب درجة أولى', min: 'متوفر: 50 طن • تعبئة 50 كجم', price: '14,960 Pi / طن', featured: true },
+            { id: '03', cat: 'crops', icon: '🍉', origin: 'دارفور وكردفان', name: 'حب بطيخ (تسالي) فرز تصديري', min: 'الحد الأدنى: 5 أطنان', price: '7,500 Pi / طن', featured: true },
+            { id: '04', cat: 'crops', icon: '🫘', origin: 'النيل الأزرق والقضارف', name: 'اللوبيا العدسية (لوبيا الحمام)', min: 'توريد بالجملة للتصدير', price: '4,800 Pi / طن', featured: false },
+            { id: '05', cat: 'crops', icon: '☁️', origin: 'مشروع الجزيرة', name: 'قطن سوداني طويل التيلة وبذور قطن', min: 'بالات مضغوطة للتصدير', price: '11,200 Pi / طن', featured: false },
+            { id: '06', cat: 'crops', icon: '🥜', origin: 'كردفان والجزيرة', name: 'فول سوداني مقشور (للزيوت والصناعات)', min: 'الحد الأدنى: 5 أطنان', price: '5,600 Pi / طن', featured: false },
+            { id: '07', cat: 'crops', icon: '🟡', origin: 'نهر النيل والشمالية', name: 'حمص سوداني فرز أول', min: 'تعبئة 50 كجم', price: '6,100 Pi / طن', featured: false },
+            { id: '08', cat: 'crops', icon: '🌾', origin: 'القضارف والنيل الأبيض', name: 'الذرة الرفيعة (فتريتة / طابت)', min: 'سوق الحبوب المحلي والتصدير', price: '2,400 Pi / طن', featured: false },
+            { id: '09', cat: 'crops', icon: '🌿', origin: 'غرب السودان', name: 'الدخن البلدي النظيف', min: 'الحد الأدنى: 2 طن', price: '3,100 Pi / طن', featured: false },
+            { id: '10', cat: 'crops', icon: '🌴', origin: 'الولاية الشمالية', name: 'تمور سودانية (بركاوي / قنديلة)', min: 'معبأة بالكرتون • قيمة مضافة', price: '4,500 Pi / طن', featured: false },
+            { id: '11', cat: 'equipment', icon: '🚜', origin: 'معدات ثقيلة', name: 'جرار زراعي 90 حصان + محراث قرصي', min: 'تسليم بورتسودان / مدني', price: '48,000 Pi', featured: false },
+            { id: '12', cat: 'equipment', icon: '⚙️', origin: 'ماكينات', name: 'آلة غربلة وتنظيف السمسم والحبوب', min: 'طاقة إنتاجية 3 طن/ساعة', price: '19,500 Pi', featured: false },
+            { id: '13', cat: 'inputs', icon: '🧪', origin: 'مدخلات زراعية', name: 'سماد يوريا 46% + بذور محسنة', min: 'توريد للمشاريع والجمعيات', price: '1,850 Pi / طن', featured: false }
+        ];
+
+        // سجل الاتفاقات الرقمية
+        let digitalOrders = [
+            {
+                id: 'AGR-2026-8841',
+                product: 'سمسم أبيض منظف (نقاوة 99%)',
+                quantity: '10 أطنان',
+                location: 'بورتسودان (تصدير)',
+                date: '2026-11-25',
+                status: 'موثق عبر Pi Network',
+                txid: 'pi_tx_99482a7f1c3b'
+            }
+        ];
+
+        function createProductCard(item) {
+            return `
+                <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-forest/10 flex gap-3.5 items-center">
+                    <div class="w-16 h-16 rounded-xl bg-sand border border-gold/30 flex flex-col items-center justify-center shrink-0 text-center">
+                        <span class="text-2xl">${item.icon}</span>
+                        <span class="text-[10px] font-bold text-forest mt-0.5">#${item.id}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-forest/10 text-forest">${item.origin}</span>
+                            <span class="text-[10px] text-emerald-700 font-bold flex items-center gap-0.5">
+                                <i data-lucide="qr-code" class="w-3 h-3"></i> QR
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-sm text-gray-900 mt-1 truncate">${item.name}</h4>
+                        <p class="text-[11px] text-gray-500 mt-0.5">${item.min}</p>
+                        <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
+                            <span class="font-english font-bold text-xs text-forest">${item.price}</span>
+                            <button onclick="openActionModal('order', '${item.name}')" class="bg-forest text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-forest/90">
+                                طلب الصفقة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initLists() {
+            // عرض المحاصيل الـ 3 الأولى في الرئيسية
+            const featuredEl = document.getElementById('featuredCropsContainer');
+            featuredEl.innerHTML = marketItems.filter(i => i.featured).map(createProductCard).join('');
+
+            // عرض السوق الكامل
+            renderMarketList('all');
+
+            // عرض الطلبات
+            renderOrdersList();
+            lucide.createIcons();
+        }
+
+        function renderMarketList(category) {
+            const listEl = document.getElementById('fullMarketList');
+            const filtered = category === 'all' ? marketItems : marketItems.filter(i => i.cat === category);
+            listEl.innerHTML = filtered.map(createProductCard).join('');
+            lucide.createIcons();
+        }
+
+        function filterMarket(cat) {
+            switchTab('market');
+            renderMarketList(cat);
+        }
+
+        function renderOrdersList() {
+            const container = document.getElementById('ordersListContainer');
+            document.getElementById('ordersCountBadge').innerText = `${digitalOrders.length} اتفاقات`;
+            container.innerHTML = digitalOrders.map((ord, idx) => `
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-forest/15 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="font-english text-xs font-bold text-agriBlue">${ord.id}</span>
+                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">${ord.status}</span>
+                    </div>
+                    <h4 class="font-bold text-sm text-gray-900">${ord.product}</h4>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-gray-600 bg-sand/50 p-2.5 rounded-xl">
+                        <div>الكمية: <strong>${ord.quantity}</strong></div>
+                        <div>التسليم: <strong>${ord.location}</strong></div>
+                    </div>
+                    <div class="flex items-center justify-between pt-1">
+                        <span class="text-[10px] text-gray-400 font-english">TX: ${ord.txid.slice(0, 14)}...</span>
+                        <button onclick="showOrderQR(${idx})" class="bg-agriBlue text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                            <i data-lucide="qr-code" class="w-3.5 h-3.5 text-gold"></i> عرض رمز QR
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function showOrderQR(index) {
+            const ord = digitalOrders[index];
+            const qrData = encodeURIComponent(`MONEEB-SUDAN-AGRO|ID:${ord.id}|ITEM:${ord.product}|QTY:${ord.quantity}|LOC:${ord.location}|TX:${ord.txid}`);
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&color=164B35&data=${qrData}`;
+            
+            document.getElementById('qrImageContainer').innerHTML = `<img src="${qrUrl}" alt="QR Code" class="rounded-xl border p-2 shadow-sm">`;
+            document.getElementById('qrDetails').innerHTML = `
+                <div><strong>رقم الاتفاق:</strong> ${ord.id}</div>
+                <div><strong>المنتج:</strong> ${ord.product}</div>
+                <div><strong>الكمية:</strong> ${ord.quantity}</div>
+                <div><strong>نقطة التسليم:</strong> ${ord.location}</div>
+                <div><strong>حالة التوثيق:</strong> ${ord.status}</div>
+            `;
+            const modal = document.getElementById('qrModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // التنقل بين التبويبات السفلية
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-forest', 'font-bold');
+                btn.classList.add('text-gray-400');
+            });
+            const activeBtn = document.getElementById('nav-' + tabName);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-400');
+                activeBtn.classList.add('text-forest', 'font-bold');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // مسار دالة السيرفر في Vercel
+        const BACKEND_PAYMENT_ENDPOINT = '/api/pi-payment';
+        let piUser = null;
+
+        try {
+            if (window.Pi) {
+                Pi.init({ version: "2.0", sandbox: true });
+                authenticatePiUser();
+            }
+        } catch (err) {
+            console.warn("Pi SDK init skipped outside Pi Browser:", err);
+        }
+
+        async function authenticatePiUser() {
+            if (!window.Pi) return;
+            try {
+                const scopes = ['username', 'payments'];
+                const auth = await Pi.authenticate(scopes, onIncompletePaymentFound);
+                piUser = auth.user;
+                document.getElementById('piUsername').innerText = '@' + piUser.username;
+                document.getElementById('accountUsername').innerText = '@' + piUser.username;
+            } catch (error) {
+                console.error("Pi Auth Error:", error);
+            }
+        }
+
+        async function onIncompletePaymentFound(payment) {
+            if (payment.transaction && payment.transaction.txid) {
+                await callBackend('complete', payment.identifier, payment.transaction.txid);
+            }
+        }
+
+        async function callBackend(action, paymentId, txid = null) {
+            const response = await fetch(BACKEND_PAYMENT_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action, paymentId, txid })
+            });
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error || 'Server payment error');
+            }
+            return await response.json();
+        }
+
+        function saveNewAgreement(product, quantity, location, txid) {
+            const newOrder = {
+                id: 'AGR-2026-' + Math.floor(1000 + Math.random() * 9000),
+                product,
+                quantity: quantity + ' طن / وحدة',
+                location,
+                date: new Date().toISOString().split('T')[0],
+                status: 'موثق عبر Pi Network',
+                txid
+            };
+            digitalOrders.unshift(newOrder);
+            renderOrdersList();
+            switchTab('orders');
+        }
+
+        async function startPiAgreementPayment() {
+            const product = document.getElementById('modalProduct').value;
+            const quantity = document.getElementById('modalQuantity').value;
+            const location = document.getElementById('modalLocation').value;
+
+            if (!window.Pi) {
+                // محاكاة في المتصفح العادي لمعاينة توليد الاتفاق ورمز QR
+                closeModal();
+                saveNewAgreement(product, quantity, location, 'demo_tx_' + Date.now());
+                showStatus("✅ تم إنشاء الاتفاق الرقمي وتوليد رمز QR (وضع المعاينة).", "success");
+                return;
+            }
+
+            const btn = document.getElementById('payPiBtn');
+            btn.disabled = true;
+            btn.innerText = "جاري الاتصال بمحفظة Pi...";
+
+            try {
+                if (!piUser) await authenticatePiUser();
+
+                Pi.createPayment({
+                    amount: 1.0,
+                    memo: `Sudan Agro Agreement: ${product} (${quantity})`,
+                    metadata: { platform: "MONEEB GLOBAL Sudan Agro", product, quantity, location }
+                }, {
+                    onReadyForServerApproval: async function(paymentId) {
+                        showStatus("جاري اعتماد المعاملة من السيرفر...", "info");
+                        await callBackend('approve', paymentId);
+                    },
+                    onReadyForServerCompletion: async function(paymentId, txid) {
+                        showStatus("جاري تأكيد التسجيل على البلوكشين...", "info");
+                        await callBackend('complete', paymentId, txid);
+                        closeModal();
+                        saveNewAgreement(product, quantity, location, txid);
+                        showStatus(`✅ تم توثيق الاتفاق بنجاح على Pi Network!`, "success");
+                    },
+                    onCancel: function() {
+                        closeModal();
+                        showStatus("تم إلغاء عملية الدفع.", "warning");
+                    },
+                    onError: function(error) {
+                        closeModal();
+                        showStatus("حدث خطأ أثناء الدفع: " + error.message, "error");
+                    }
+                });
+            } catch (err) {
+                showStatus("تعذر بدء الدفع: " + err.message, "error");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "تأكيد الاتفاق والدفع عبر Pi (1 Pi)";
+            }
+        }
+
+        function showStatus(msg, type) {
+            const toast = document.getElementById('statusToast');
+            toast.classList.remove('hidden', 'bg-emerald-50', 'text-emerald-800', 'border-emerald-200', 'bg-amber-50', 'text-amber-800', 'border-amber-200', 'bg-red-50', 'text-red-800', 'border-red-200');
+            if (type === 'success') toast.classList.add('bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
+            else if (type === 'error') toast.classList.add('bg-red-50', 'text-red-800', 'border-red-200');
+            else toast.classList.add('bg-amber-50', 'text-amber-800', 'border-amber-200');
+            toast.innerText = msg;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        let currentLang = 'ar';
+        const translations = {
+            en: {
+                brandSub: "SUDAN AGRO • Digital Marketplace",
+                sesameTicker: "White Sesame (Gadarif): <strong class='text-gold'>420 Pi</strong> / Qantar",
+                gumTicker: "Gum Arabic (Hashab): <strong class='text-gold'>680 Pi</strong> / Qantar",
+                searchPlaceholder: "Search sesame, gum arabic, equipment, farmland...",
+                piBadge: "Powered by Pi Network Ecosystem",
+                heroTitle: "Sudan's Digital Agricultural Marketplace",
+                heroDesc: "From Sudan's Farms to Global Markets. Export crops, machinery, farmland, and verified digital trade agreements.",
+                btnQuote: "Request Quote (RFQ)",
+                btnSell: "List Your Crop",
+                secCategories: "Ecosystem Sectors",
+                viewAll: "View All",
+                catCrops: "Crops",
+                catEquip: "Equipment",
+                catInputs: "Fertilizers",
+                catLand: "Farmland",
+                secFeatured: "Priority Export Crops",
+                secBuyers: "Active Buyers Requests",
+                postRequest: "+ Post Request",
+                web3Title: "Digital Trade Agreements & QR",
+                web3Desc: "Every deal is documented with a digital agreement specifying quantity, quality, and delivery, plus a QR traceability code.",
+                navHome: "Home",
+                navMarket: "Market",
+                navInvest: "Invest",
+                navOrders: "Orders",
+                navAccount: "Account"
+            }
+        };
+
+        const arTexts = {};
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            arTexts[el.getAttribute('data-i18n')] = el.innerHTML;
+        });
+
+        function toggleLanguage() {
+            const html = document.documentElement;
+            const body = document.body;
+            const langLabel = document.getElementById('langLabel');
+
+            if (currentLang === 'ar') {
+                currentLang = 'en';
+                html.setAttribute('lang', 'en');
+                html.setAttribute('dir', 'ltr');
+                body.classList.remove('font-arabic');
+                body.classList.add('font-english');
+                langLabel.innerText = 'عربي';
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (translations.en[key]) el.innerHTML = translations.en[key];
+                });
+                document.querySelector('[data-i18n-placeholder]').placeholder = translations.en.searchPlaceholder;
+            } else {
+                currentLang = 'ar';
+                html.setAttribute('lang', 'ar');
+                html.setAttribute('dir', 'rtl');
+                body.classList.remove('font-english');
+                body.classList.add('font-arabic');
+                langLabel.innerText = 'English';
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (arTexts[key]) el.innerHTML = arTexts[key];
+                });
+                document.querySelector('[data-i18n-placeholder]').placeholder = "ابحث عن سمسم، صمغ عربي، معدات، أراضٍ...";
+            }
+        }
+
+        function openActionModal(type, productName = '') {
+            const modal = document.getElementById('actionModal');
+            const input = document.getElementById('modalProduct');
+            if (productName) input.value = productName;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('actionModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // تشغيل القوائم عند التحميل
+        initLists();
+    </script>
+</body>
+</html>
