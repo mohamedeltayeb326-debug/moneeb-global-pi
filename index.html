@@ -559,11 +559,13 @@
             }
         }
 
-        async function onIncompletePaymentFound(payment) {
-            if (payment.transaction && payment.transaction.txid) {
-                await callBackend('complete', payment.identifier, payment.transaction.txid);
-            }
-        }
+      async function onIncompletePaymentFound(payment) {
+    if (payment.transaction && payment.transaction.txid) {
+        await callBackend('complete', payment.identifier, payment.transaction.txid);
+    } else if (payment.identifier) {
+        await callBackend('approve', payment.identifier);
+    }
+}
 
         async function callBackend(action, paymentId, txid = null) {
             const response = await fetch(BACKEND_PAYMENT_ENDPOINT, {
